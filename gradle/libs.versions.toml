@@ -26,8 +26,10 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 text-recognition-japanese = { group = "com.google.mlkit", name = "text-recognition-japanese", version.ref = "mlkit" }
 dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
-dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
+dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
+dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
+dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
 camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera2" }
 camera2-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera2" }
 camera2-video = { group = "androidx.camera", name = "camera-video", version.ref = "camera2" }
