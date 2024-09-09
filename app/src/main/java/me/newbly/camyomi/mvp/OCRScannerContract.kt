@@ -10,6 +10,7 @@ interface OCRScannerContract {
         fun hideProgress()
         fun showResult(text: String, definitions: Map<String, String>)
         fun showError(errorMessage: String)
+        fun showHello()
     }
 
     interface Presenter {
@@ -19,6 +20,7 @@ interface OCRScannerContract {
         fun onOCRResult(text: String)
         fun onOCRFailure(e: Exception)
         fun fetchDefinitions(text: String)
+        fun onButtonClicked()
     }
 
     interface Model {

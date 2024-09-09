@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/OCRScannerFragment">
+
+    <fragment
+        android:id="@+id/OCRScannerFragment"
+        android:name="me.newbly.camyomi.ui.ocrscanner.OCRScannerFragment"
+        android:label="fragment_ocr_scanner"
+        tools:layout="@layout/fragment_ocr_scanner" />
+</navigation>

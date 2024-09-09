@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CamYomi</string>
+    <string name="placeholder">Hello world!</string>
 </resources>
