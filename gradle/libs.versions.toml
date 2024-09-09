@@ -10,6 +10,8 @@ material = "1.12.0"
 activity = "1.9.2"
 constraintlayout = "2.1.4"
 mlkit = "16.0.1"
+dagger = "2.52"
+ksp = "2.0.20-1.0.24"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,8 +23,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 text-recognition-japanese = { group = "com.google.mlkit", name = "text-recognition-japanese", version.ref = "mlkit" }
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
