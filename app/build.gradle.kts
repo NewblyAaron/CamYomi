@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.navigation.dynamic.features.fragment)
     implementation(libs.text.recognition.japanese)
     implementation(libs.dagger)
+    implementation(libs.dagger.android)
     ksp(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
