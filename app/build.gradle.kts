@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.ksp)
 }
 
@@ -51,10 +52,14 @@ dependencies {
     implementation(libs.camera2.view)
     implementation(libs.camera2.mlkit.vision)
     implementation(libs.camera2.extensions)
+    implementation(libs.navigation.ui)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.dynamic.features.fragment)
     implementation(libs.text.recognition.japanese)
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.navigation.testing)
 }
