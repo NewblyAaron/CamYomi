@@ -7,17 +7,15 @@
     android:orientation="vertical"
     tools:context=".ui.ocrscanner.OCRScannerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/hello_text"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/launch_camera_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder" />
+        android:text="Take photo" />
 
     <Button
-        android:id="@+id/hello_button"
-        android:layout_width="200dp"
+        android:id="@+id/launch_picker_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Press me!" />
-
+        android:text="Pick image" />
 </LinearLayout>
