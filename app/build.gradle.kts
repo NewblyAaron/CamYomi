@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.navigation.safeargs)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
@@ -56,11 +57,9 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.dynamic.features.fragment)
     implementation(libs.text.recognition.japanese)
-    implementation(libs.dagger)
-    implementation(libs.dagger.android)
-    implementation(libs.dagger.android.support)
-    ksp(libs.dagger.compiler)
-    ksp(libs.dagger.android.processor)
+    implementation(libs.hilt)
+    implementation(libs.play.services.mlkit.text.recognition)
+    ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

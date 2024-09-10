@@ -14,6 +14,7 @@ dagger = "2.52"
 ksp = "2.0.20-1.0.24"
 camera2 = "1.5.0-alpha01"
 navigation = "2.8.0"
+playServicesMlkitTextRecognition = "19.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +31,8 @@ dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", versi
 dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
 dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera2" }
 camera2-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera2" }
 camera2-video = { group = "androidx.camera", name = "camera-video", version.ref = "camera2" }
@@ -41,6 +44,7 @@ navigation-fragment = { group = "androidx.navigation", name = "navigation-fragme
 navigation-dynamic-features-fragment = { group = "androidx.navigation", name = "navigation-dynamic-features-fragment", version.ref = "navigation" }
 navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
 navigation-safeargs-gradle-plugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
+play-services-mlkit-text-recognition = { group = "com.google.android.gms", name = "play-services-mlkit-text-recognition", version.ref = "playServicesMlkitTextRecognition" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -48,3 +52,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 navigation-safeargs = { id = "androidx.navigation.safeargs", version.ref = "navigation" }
 navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
