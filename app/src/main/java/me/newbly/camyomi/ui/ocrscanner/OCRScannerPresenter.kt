@@ -1,11 +1,12 @@
 package me.newbly.camyomi.ui.ocrscanner
 
+import android.graphics.Bitmap
+import android.util.Log
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import me.newbly.camyomi.mvp.BasePresenter
 import me.newbly.camyomi.mvp.OCRScannerContract
-import javax.inject.Inject
 
 class OCRScannerPresenter @AssistedInject constructor(
     private val model: OCRScannerContract.Model,
@@ -25,30 +26,34 @@ class OCRScannerPresenter @AssistedInject constructor(
     }
 
     override fun onCameraSelected() {
-        TODO("Not yet implemented")
+        view.launchCamera()
     }
 
     override fun onImagePickerSelected() {
-        TODO("Not yet implemented")
+        view.launchImagePicker()
     }
 
-    override fun onImageCaptured(image: Any) {
-        TODO("Not yet implemented")
+    override fun onImageCaptured(image: Bitmap) {
+        model.processImageForOCR(
+            image,
+            onSuccess = { result ->
+                onOCRResult(result)
+            },
+            onFailure = { exception ->
+                onOCRFailure(exception)
+            }
+        )
     }
 
     override fun onOCRResult(text: String) {
-        TODO("Not yet implemented")
+        Log.d("OCRScannerPresenter", "Recognized text: $text")
     }
 
     override fun onOCRFailure(e: Exception) {
-        TODO("Not yet implemented")
+        Log.e("OCRScannerPresenter", e.localizedMessage, e)
     }
 
     override fun fetchDefinitions(text: String) {
         TODO("Not yet implemented")
-    }
-
-    override fun onButtonClicked() {
-        view.showHello()
     }
 }
