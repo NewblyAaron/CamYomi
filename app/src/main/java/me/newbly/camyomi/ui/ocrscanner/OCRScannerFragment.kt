@@ -6,19 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.mvp.OCRScannerContract
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class OCRScannerFragment : Fragment(), OCRScannerContract.View {
 
-    @Inject lateinit var presenter: OCRScannerPresenter
+    @Inject lateinit var presenterFactory: OCRScannerPresenter.Factory
+    private lateinit var presenter: OCRScannerContract.Presenter
     private lateinit var binding: FragmentOcrScannerBinding
 
     override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
         super.onAttach(context)
+
+        presenter = presenterFactory.create(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
