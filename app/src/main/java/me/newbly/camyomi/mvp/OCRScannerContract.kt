@@ -1,7 +1,6 @@
 package me.newbly.camyomi.mvp
 
 import android.graphics.Bitmap
-import com.google.mlkit.vision.common.InputImage
 
 interface OCRScannerContract {
     interface View {
@@ -9,7 +8,8 @@ interface OCRScannerContract {
         fun launchCamera()
         fun displayProgress()
         fun hideProgress()
-        fun showResult(text: String, definitions: Map<String, String>)
+        fun showRecognizedText(text: String)
+        fun showDefinition(definition: Map<String, String>)
         fun showError(errorMessage: String)
     }
 
@@ -19,7 +19,7 @@ interface OCRScannerContract {
         fun onImageCaptured(image: Bitmap)
         fun onOCRResult(text: String)
         fun onOCRFailure(e: Exception)
-        fun fetchDefinitions(text: String)
+        fun getDefinitionOf(text: String)
     }
 
     interface Model {

@@ -114,12 +114,20 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         TODO("Not yet implemented")
     }
 
-    override fun showResult(text: String, definitions: Map<String, String>) {
+    override fun showDefinition(definition: Map<String, String>) {
         TODO("Not yet implemented")
     }
 
+    override fun showRecognizedText(text: String) {
+        binding.recognizedText.text = text
+    }
+
     override fun showError(errorMessage: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(
+            context,
+            "Error in processing image!\n$errorMessage",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun checkCameraPermissions(): Boolean {

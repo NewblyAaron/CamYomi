@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".ui.ocrscanner.OCRScannerFragment">
 
+    <TextView
+        android:id="@+id/recognized_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Recognized text will display here" />
+
     <Button
         android:id="@+id/launch_camera_button"
         android:layout_width="match_parent"
@@ -18,4 +25,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pick image" />
+
 </LinearLayout>

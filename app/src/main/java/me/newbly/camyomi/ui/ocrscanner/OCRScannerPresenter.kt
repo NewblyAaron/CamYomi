@@ -47,13 +47,15 @@ class OCRScannerPresenter @AssistedInject constructor(
 
     override fun onOCRResult(text: String) {
         Log.d("OCRScannerPresenter", "Recognized text: $text")
+        view.showRecognizedText(text)
     }
 
     override fun onOCRFailure(e: Exception) {
         Log.e("OCRScannerPresenter", e.localizedMessage, e)
+        e.localizedMessage?.let { view.showError(it) }
     }
 
-    override fun fetchDefinitions(text: String) {
+    override fun getDefinitionOf(text: String) {
         TODO("Not yet implemented")
     }
 }
