@@ -16,6 +16,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
+import me.newbly.camyomi.database.entity.Entry
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.mvp.OCRScannerContract
 import javax.inject.Inject
@@ -48,6 +49,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             if (uri != null) {
                 val source = ImageDecoder.createSource(requireActivity().contentResolver, uri)
                 val bitmap = ImageDecoder.decodeBitmap(source)
+
                 presenter.onImageCaptured(bitmap)
             } else {
                 Toast.makeText(
@@ -114,7 +116,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         TODO("Not yet implemented")
     }
 
-    override fun showDefinition(definition: Map<String, String>) {
+    override fun showEntry(entry: Entry) {
         TODO("Not yet implemented")
     }
 

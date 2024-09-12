@@ -5,6 +5,9 @@ import android.util.Log
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.newbly.camyomi.mvp.BasePresenter
 import me.newbly.camyomi.mvp.OCRScannerContract
 
@@ -12,6 +15,9 @@ class OCRScannerPresenter @AssistedInject constructor(
     private val model: OCRScannerContract.Model,
     @Assisted override val view: OCRScannerContract.View,
 ) : BasePresenter<OCRScannerContract.View>(view), OCRScannerContract.Presenter {
+
+    private val presenterScope = CoroutineScope(Dispatchers.Main)
+
     @AssistedFactory
     interface Factory {
         fun create(view: OCRScannerContract.View): OCRScannerPresenter
@@ -46,8 +52,9 @@ class OCRScannerPresenter @AssistedInject constructor(
     }
 
     override fun onOCRResult(text: String) {
-        Log.d("OCRScannerPresenter", "Recognized text: $text")
         view.showRecognizedText(text)
+
+        getEntryOf(text)
     }
 
     override fun onOCRFailure(e: Exception) {
@@ -55,7 +62,17 @@ class OCRScannerPresenter @AssistedInject constructor(
         e.localizedMessage?.let { view.showError(it) }
     }
 
-    override fun getDefinitionOf(text: String) {
-        TODO("Not yet implemented")
+    private fun getEntryOf(text: String) {
+        presenterScope.launch {
+            model.getEntries(
+                text,
+                onSuccess = {
+                    Log.d("OCRScannerPresenter", it.toString())
+                },
+                onFailure = {
+                    Log.e("OCRScannerPresenter", it.localizedMessage, it)
+                }
+            )
+        }
     }
 }

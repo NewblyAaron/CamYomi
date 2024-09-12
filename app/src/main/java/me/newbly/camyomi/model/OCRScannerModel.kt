@@ -4,10 +4,15 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognizer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import me.newbly.camyomi.database.dao.EntryDao
+import me.newbly.camyomi.database.entity.Entry
 import me.newbly.camyomi.mvp.OCRScannerContract
 import javax.inject.Inject
 
 class OCRScannerModel @Inject constructor(
+    private val entryDao: EntryDao,
     private val recognizer: TextRecognizer
 ) : OCRScannerContract.Model {
     private fun extractJapaneseText(text: String): String {
@@ -41,11 +46,17 @@ class OCRScannerModel @Inject constructor(
             }
     }
 
-    override fun getDefinitions(
+    override suspend fun getEntries(
         text: String,
-        onSuccess: (Map<String, String>) -> Unit,
+        onSuccess: (List<Entry>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        TODO("Not yet implemented")
+        val entry = entryDao.findByText("$text%")
+
+        if (entry.isEmpty()) {
+            onFailure(NullPointerException())
+        }
+
+        onSuccess(entry)
     }
 }
