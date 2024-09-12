@@ -18,6 +18,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildFeatures {
@@ -59,8 +63,13 @@ dependencies {
     implementation(libs.text.recognition.japanese)
     implementation(libs.hilt)
     implementation(libs.play.services.mlkit.text.recognition)
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
     ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
     testImplementation(libs.junit)
+    testImplementation(libs.room.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.navigation.testing)
