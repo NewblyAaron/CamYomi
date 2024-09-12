@@ -10,7 +10,7 @@ interface OCRScannerContract {
         fun displayProgress()
         fun hideProgress()
         fun showRecognizedText(text: String)
-        fun showEntry(entry: Entry)
+        fun showDefinitions(entries: List<Entry>)
         fun showError(errorMessage: String)
     }
 

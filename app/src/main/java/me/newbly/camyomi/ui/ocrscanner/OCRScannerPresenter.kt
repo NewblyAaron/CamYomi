@@ -66,11 +66,12 @@ class OCRScannerPresenter @AssistedInject constructor(
         presenterScope.launch {
             model.getEntries(
                 text,
-                onSuccess = {
-                    Log.d("OCRScannerPresenter", it.toString())
+                onSuccess = { entries ->
+                    view.showDefinitions(entries)
                 },
-                onFailure = {
-                    Log.e("OCRScannerPresenter", it.localizedMessage, it)
+                onFailure = { e ->
+                    Log.e("OCRScannerPresenter", e.localizedMessage, e)
+                    e.localizedMessage?.let { view.showError(it) }
                 }
             )
         }
