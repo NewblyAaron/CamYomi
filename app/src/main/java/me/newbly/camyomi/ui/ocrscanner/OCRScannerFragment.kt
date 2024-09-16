@@ -15,7 +15,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import me.newbly.camyomi.ui.adapter.DefinitionAdapter
+import me.newbly.camyomi.database.entity.Entry
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.mvp.OCRScannerContract
 import javax.inject.Inject
@@ -29,6 +32,8 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     private lateinit var cameraLauncher: ActivityResultLauncher<Void?>
     private lateinit var pickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+
+    private val definitionAdapter = DefinitionAdapter()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,6 +53,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             if (uri != null) {
                 val source = ImageDecoder.createSource(requireActivity().contentResolver, uri)
                 val bitmap = ImageDecoder.decodeBitmap(source)
+
                 presenter.onImageCaptured(bitmap)
             } else {
                 Toast.makeText(
@@ -75,6 +81,11 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding.definitionList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = definitionAdapter
+        }
+
         binding.launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
         binding.launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
     }
@@ -96,7 +107,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
 
     override fun launchCamera() {
         try {
-            if (checkCameraPermissions()) {
+            if (hasCameraPermission()) {
                 cameraLauncher.launch(null)
             } else {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
@@ -114,8 +125,8 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         TODO("Not yet implemented")
     }
 
-    override fun showDefinition(definition: Map<String, String>) {
-        TODO("Not yet implemented")
+    override fun showDefinitions(entries: List<Entry>) {
+        definitionAdapter.submitList(entries)
     }
 
     override fun showRecognizedText(text: String) {
@@ -130,7 +141,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         ).show()
     }
 
-    private fun checkCameraPermissions(): Boolean {
+    private fun hasCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.CAMERA,

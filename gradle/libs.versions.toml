@@ -15,6 +15,7 @@ ksp = "2.0.20-1.0.24"
 camera2 = "1.5.0-alpha01"
 navigation = "2.8.0"
 playServicesMlkitTextRecognition = "19.0.1"
+room = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,12 @@ navigation-dynamic-features-fragment = { group = "androidx.navigation", name = "
 navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
 navigation-safeargs-gradle-plugin = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 play-services-mlkit-text-recognition = { group = "com.google.android.gms", name = "play-services-mlkit-text-recognition", version.ref = "playServicesMlkitTextRecognition" }
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+room-guava = { group = "androidx.room", name = "room-guava", version.ref = "room" }
+room-test = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

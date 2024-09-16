@@ -1,0 +1,124 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "9bd99984450c8ca72ca8c250b93a3acd",
+    "entities": [
+      {
+        "tableName": "Entry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `keb` TEXT, `ke_inf` TEXT, `ke_pri` TEXT, `re` TEXT, `re_nokanji` TEXT, `re_restr` TEXT, `re_inf` TEXT, `re_pri` TEXT, `ant` TEXT, `pos` TEXT, `field` TEXT, `dial` TEXT, `gloss` TEXT, `ex_text` TEXT, `ex_sent` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "keb",
+            "columnName": "keb",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "keInf",
+            "columnName": "ke_inf",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "kePri",
+            "columnName": "ke_pri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "re",
+            "columnName": "re",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reNoKanji",
+            "columnName": "re_nokanji",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reRestr",
+            "columnName": "re_restr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reInf",
+            "columnName": "re_inf",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rePri",
+            "columnName": "re_pri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ant",
+            "columnName": "ant",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pos",
+            "columnName": "pos",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "field",
+            "columnName": "field",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dial",
+            "columnName": "dial",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gloss",
+            "columnName": "gloss",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "exText",
+            "columnName": "ex_text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "exSent",
+            "columnName": "ex_sent",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9bd99984450c8ca72ca8c250b93a3acd')"
+    ]
+  }
+}

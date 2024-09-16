@@ -1,6 +1,7 @@
 package me.newbly.camyomi.mvp
 
 import android.graphics.Bitmap
+import me.newbly.camyomi.database.entity.Entry
 
 interface OCRScannerContract {
     interface View {
@@ -9,7 +10,7 @@ interface OCRScannerContract {
         fun displayProgress()
         fun hideProgress()
         fun showRecognizedText(text: String)
-        fun showDefinition(definition: Map<String, String>)
+        fun showDefinitions(entries: List<Entry>)
         fun showError(errorMessage: String)
     }
 
@@ -19,7 +20,6 @@ interface OCRScannerContract {
         fun onImageCaptured(image: Bitmap)
         fun onOCRResult(text: String)
         fun onOCRFailure(e: Exception)
-        fun getDefinitionOf(text: String)
     }
 
     interface Model {
@@ -28,9 +28,9 @@ interface OCRScannerContract {
             onSuccess: (String) -> Unit,
             onFailure: (Exception) -> Unit
         )
-        fun getDefinitions(
+        suspend fun getEntries(
             text: String,
-            onSuccess: (Map<String, String>) -> Unit,
+            onSuccess: (List<Entry>) -> Unit,
             onFailure: (Exception) -> Unit
         )
     }
