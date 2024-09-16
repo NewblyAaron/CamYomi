@@ -22,6 +22,65 @@ data class Entry(
     @ColumnInfo(name = "gloss") val gloss: String?,
     @ColumnInfo(name = "ex_text") val exText: String?,
     @ColumnInfo(name = "ex_sent") val exSent: String?,
-)
+) {
+    fun getMainKanjiReading(): String {
+        if (keb.isNullOrBlank()) return ""
+
+        return keb.split(";")[0]
+    }
+
+    fun getMainKanaReading(): String {
+        if (re.isNullOrBlank()) return ""
+
+        return re.split(";")[0]
+    }
+
+    fun getOtherReadings(): String {
+        val kanjiReadings = keb?.split(";") ?: listOf()
+        val kanaReadings = re?.split(";") ?: listOf()
+
+        var formattedString: String = ""
+
+        formattedString += "Other kanji readings: "
+        if (kanjiReadings.isEmpty()) {
+            formattedString += "None\n"
+        } else {
+            for (reading in kanjiReadings) {
+                formattedString += "$reading, "
+            }
+            formattedString = formattedString
+                .trimEnd()
+                .removeSuffix(",")
+                .plus("\n")
+        }
+
+        formattedString += "Other kana readings: "
+        if (kanaReadings.isEmpty()) {
+            formattedString += "None\n"
+        } else {
+            for (reading in kanaReadings) {
+                formattedString += "$reading, "
+            }
+            formattedString =  formattedString
+                .trimEnd()
+                .removeSuffix(",")
+        }
+
+        return formattedString
+    }
+
+    fun getGlossary(): String {
+        if (gloss.isNullOrBlank()) return ""
+
+        val glossary = gloss.replace("-None", "").split("|")
+        var formattedString: String = ""
+
+        for (def in glossary) {
+            formattedString += "• $def\n"
+        }
+
+        return formattedString
+    }
+}
 
 // id, keb, ke_inf, ke_pri, re, re_nokanji, re_restr, re_inf, re_pri, ant, pos, field, dial, gloss, ex_text, ex_sent

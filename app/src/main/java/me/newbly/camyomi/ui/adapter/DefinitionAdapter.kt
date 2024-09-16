@@ -13,16 +13,19 @@ class DefinitionAdapter : ListAdapter<Entry, DefinitionAdapter.ViewHolder>(DIFF_
         private val binding: DefinitionItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(entry: Entry) {
-            binding.kanjiReadingText.text = entry.keb
-            binding.kanaReadingText.text = entry.re
-            binding.glossaryText.text = entry.gloss
+            binding.kanjiReadingText.text = entry.getMainKanjiReading()
+            binding.kanaReadingText.text = entry.getMainKanaReading()
+            binding.otherReadingsText.text = entry.getOtherReadings()
+            binding.glossaryText.text = entry.getGlossary()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             DefinitionItemBinding.inflate(
-                LayoutInflater.from(parent.context)
+                LayoutInflater.from(parent.context),
+                parent,
+                false
             )
         )
     }
