@@ -86,9 +86,16 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             adapter = definitionAdapter
         }
 
+        binding.recognizedText.showSoftInputOnFocus = false
+        binding.searchButton.setOnClickListener {
+            val selectedText: String = binding.recognizedText.text
+                .substring(binding.recognizedText.selectionStart, binding.recognizedText.selectionEnd)
+            presenter.onSearchButtonClicked(selectedText)
+        }
+
         binding.launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
         binding.launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
-        binding.recognizedText.showSoftInputOnFocus = false
+
     }
 
     override fun onCreateView(

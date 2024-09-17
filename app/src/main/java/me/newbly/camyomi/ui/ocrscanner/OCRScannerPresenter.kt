@@ -53,13 +53,16 @@ class OCRScannerPresenter @AssistedInject constructor(
 
     override fun onOCRResult(text: String) {
         view.showRecognizedText(text)
-
-        getEntryOf(text)
     }
 
     override fun onOCRFailure(e: Exception) {
         Log.e("OCRScannerPresenter", e.localizedMessage, e)
         e.localizedMessage?.let { view.showError(it) }
+    }
+
+    override fun onSearchButtonClicked(selectedText: String) {
+        Log.d("OCRScannerPresenter", "Selected text: $selectedText")
+        if (selectedText.isNotBlank()) getEntryOf(selectedText)
     }
 
     private fun getEntryOf(text: String) {
