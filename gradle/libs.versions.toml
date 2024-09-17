@@ -21,6 +21,7 @@ camera2 = "1.5.0-alpha01"
 navigation = "2.8.0"
 playServicesMlkitTextRecognition = "19.0.1"
 room = "2.6.1"
+kuromoji = "0.9.0"
 
 
 [libraries]
@@ -64,6 +65,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 room-guava = { group = "androidx.room", name = "room-guava", version.ref = "room" }
 room-test = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+kuromoji = { group = "com.atilika.kuromoji", name = "kuromoji-ipadic", version.ref = "kuromoji" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
