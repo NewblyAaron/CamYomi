@@ -7,17 +7,22 @@
     android:gravity="center"
     tools:context=".ui.ocrscanner.OCRScannerFragment">
 
-    <TextView
+    <EditText
         android:id="@+id/recognized_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:autofillHints=""
         android:gravity="center"
-        android:text="Recognized text will display here"
+        android:hint="Recognized text will display here"
+        android:inputType="none"
+        android:lines="2"
+        android:maxLines="2"
+        android:textIsSelectable="true"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/search_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
@@ -56,5 +61,17 @@
             android:text="Pick image"
             app:icon="@android:drawable/ic_menu_gallery" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Search"
+        app:layout_constraintBottom_toTopOf="@+id/definition_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

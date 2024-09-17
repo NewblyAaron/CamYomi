@@ -20,6 +20,7 @@ interface OCRScannerContract {
         fun onImageCaptured(image: Bitmap)
         fun onOCRResult(text: String)
         fun onOCRFailure(e: Exception)
+        fun onSearchButtonClicked(selectedText: String)
     }
 
     interface Model {
