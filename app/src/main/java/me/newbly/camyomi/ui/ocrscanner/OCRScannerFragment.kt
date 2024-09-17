@@ -88,6 +88,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
 
         binding.launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
         binding.launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
+        binding.recognizedText.showSoftInputOnFocus = false
     }
 
     override fun onCreateView(
@@ -130,7 +131,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     }
 
     override fun showRecognizedText(text: String) {
-        binding.recognizedText.text = text
+        binding.recognizedText.setText(text)
     }
 
     override fun showError(errorMessage: String) {

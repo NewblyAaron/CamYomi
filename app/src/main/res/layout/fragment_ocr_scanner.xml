@@ -7,16 +7,19 @@
     android:gravity="center"
     tools:context=".ui.ocrscanner.OCRScannerFragment">
 
-    <TextView
+    <EditText
         android:id="@+id/recognized_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:autofillHints=""
         android:gravity="center"
-        android:text="Recognized text will display here"
-        android:textSize="18sp"
+        android:hint="Recognized text will display here"
+        android:textSize="20sp"
+        android:inputType="none"
+        android:textIsSelectable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
