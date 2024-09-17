@@ -17,7 +17,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // default value: androidx.test.runner.AndroidJUnitRunner
+        testInstrumentationRunner = "me.newbly.camyomi.CustomTestRunner"
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
@@ -39,6 +40,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -69,8 +73,21 @@ dependencies {
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.hilt.testing)
     testImplementation(libs.room.test)
-    androidTestImplementation(libs.androidx.junit)
+    kspTest(libs.hilt.compiler)
+    kspTest(libs.room.compiler)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.hilt.testing)
+    androidTestImplementation(libs.room.test)
     androidTestImplementation(libs.navigation.testing)
+    kspAndroidTest(libs.hilt.compiler)
+    kspAndroidTest(libs.room.compiler)
 }
