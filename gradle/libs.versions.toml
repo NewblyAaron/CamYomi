@@ -4,6 +4,11 @@ kotlin = "2.0.20"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
+junitKtx = "1.2.1"
+coreVersion = "1.6.1"
+runnerVersion = "1.6.2"
+rulesVersion = "1.6.1"
+robolectric = "4.13"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
@@ -17,11 +22,17 @@ navigation = "2.8.0"
 playServicesMlkitTextRecognition = "19.0.1"
 room = "2.6.1"
 
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "runnerVersion" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "rulesVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
@@ -34,6 +45,7 @@ dagger-android-support = { group = "com.google.dagger", name = "dagger-android-s
 dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
+hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera2" }
 camera2-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera2" }
 camera2-video = { group = "androidx.camera", name = "camera-video", version.ref = "camera2" }
