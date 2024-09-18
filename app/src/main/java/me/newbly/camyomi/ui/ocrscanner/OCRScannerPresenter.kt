@@ -50,8 +50,6 @@ class OCRScannerPresenter @AssistedInject constructor(
             }
         )
     }
-
-    override fun onOCRResult(text: String) {
     private fun onOCRResult(text: String) {
         view.showRecognizedText(text)
 
