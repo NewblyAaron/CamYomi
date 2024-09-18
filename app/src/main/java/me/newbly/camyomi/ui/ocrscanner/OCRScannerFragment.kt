@@ -14,6 +14,21 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,18 +43,21 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
 
     @Inject lateinit var presenterFactory: OCRScannerPresenter.Factory
     private lateinit var presenter: OCRScannerContract.Presenter
-    private lateinit var binding: FragmentOcrScannerBinding
+
+    private var _binding: FragmentOcrScannerBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var cameraLauncher: ActivityResultLauncher<Void?>
     private lateinit var pickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
     private val definitionAdapter = DefinitionAdapter()
+    private var recognizedTextMap = mapOf<String, String>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         presenter = presenterFactory.create(this)
-        binding = FragmentOcrScannerBinding.inflate(layoutInflater)
 
         cameraLauncher = registerForActivityResult(
             ActivityResultContracts.TakePicturePreview()) { bitmap ->
@@ -78,23 +96,19 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding.definitionList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = definitionAdapter
-        }
-
-        binding.launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
-        binding.launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentOcrScannerBinding.inflate(layoutInflater)
+        binding.bindView()
+
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun launchImagePicker() {
@@ -129,8 +143,11 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         definitionAdapter.submitList(entries)
     }
 
-    override fun showRecognizedText(text: String) {
-        binding.recognizedText.text = text
+    override fun showRecognizedText(wordMap: Map<String, String>) {
+        recognizedTextMap = wordMap
+        binding.composeView.setContent {
+            RecognizedJapaneseText(recognizedTextMap)
+        }
     }
 
     override fun showError(errorMessage: String) {
@@ -141,10 +158,72 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         ).show()
     }
 
+    private fun FragmentOcrScannerBinding.bindView() {
+        composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                RecognizedJapaneseText(recognizedTextMap)
+            }
+        }
+
+        definitionList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = definitionAdapter
+        }
+
+        launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
+        launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
+    }
+
     private fun hasCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.CAMERA,
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    @OptIn(ExperimentalLayoutApi::class)
+    @Composable
+    private fun RecognizedJapaneseText(
+        map: Map<String, String>,
+    ) {
+        val selectedText: MutableState<String> = rememberSaveable { mutableStateOf("") }
+        val color = if (isSystemInDarkTheme()) Color.White else Color.Black
+
+        MaterialTheme {
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                if (map.isEmpty()) {
+                    Text("Recognized text will display here", color = color)
+                } else {
+                    for (word in map.entries) {
+                        val style = if (word.key == selectedText.value) {
+                            MaterialTheme.typography.bodyLarge.copy(
+                                color = color,
+                                fontSize = 20.sp,
+                                background = Color.Red,
+                            )
+                        } else {
+                            MaterialTheme.typography.bodyLarge.copy(
+                                fontSize = 20.sp,
+                                color = color
+                            )
+                        }
+
+                        Text(
+                            word.key,
+                            style = style,
+                            modifier = Modifier
+                                .clickable {
+                                    selectedText.value = word.key
+                                    presenter.onTextClicked(word.value)
+                                }
+                        )
+                    }
+                }
+            }
+        }
     }
 }
