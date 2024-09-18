@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -201,10 +202,12 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
                         val style = if (word.key == selectedText.value) {
                             MaterialTheme.typography.bodyLarge.copy(
                                 color = color,
-                                background = Color.Red
+                                fontSize = 20.sp,
+                                background = Color.Red,
                             )
                         } else {
                             MaterialTheme.typography.bodyLarge.copy(
+                                fontSize = 20.sp,
                                 color = color
                             )
                         }
