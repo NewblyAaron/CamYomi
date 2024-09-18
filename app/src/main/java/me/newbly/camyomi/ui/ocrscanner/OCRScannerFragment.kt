@@ -28,7 +28,10 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
 
     @Inject lateinit var presenterFactory: OCRScannerPresenter.Factory
     private lateinit var presenter: OCRScannerContract.Presenter
-    private lateinit var binding: FragmentOcrScannerBinding
+
+    private var _binding: FragmentOcrScannerBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var cameraLauncher: ActivityResultLauncher<Void?>
     private lateinit var pickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
@@ -39,7 +42,6 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         super.onAttach(context)
 
         presenter = presenterFactory.create(this)
-        binding = FragmentOcrScannerBinding.inflate(layoutInflater)
 
         cameraLauncher = registerForActivityResult(
             ActivityResultContracts.TakePicturePreview()) { bitmap ->
@@ -78,22 +80,13 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding.definitionList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = definitionAdapter
-        }
-
-        binding.launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
-        binding.launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentOcrScannerBinding.inflate(layoutInflater)
+        binding.bindView()
+
         return binding.root
     }
 
@@ -139,6 +132,16 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             "Error in processing image!\n$errorMessage",
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun FragmentOcrScannerBinding.bindView() {
+        definitionList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = definitionAdapter
+        }
+
+        launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
+        launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
     }
 
     private fun hasCameraPermission(): Boolean {
