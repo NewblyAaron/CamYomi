@@ -135,6 +135,13 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     }
 
     private fun FragmentOcrScannerBinding.bindView() {
+        composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                RecognizedJapaneseText(recognizedTextMap)
+            }
+        }
+
         definitionList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = definitionAdapter
