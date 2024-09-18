@@ -50,7 +50,17 @@ class OCRScannerPresenter @AssistedInject constructor(
             }
         )
     }
+
     private fun onOCRResult(text: String) {
+        val tokens = tokenizer.tokenize(text)
+        val dictionaryForms = mutableSetOf<String>()
+        var log = ""
+        tokens.forEach {
+            log += "${it.surface}\t${it.allFeatures}\n"
+            dictionaryForms.add(it.baseForm)
+        }
+        Log.d("OCRScannerPresenter", log)
+
         view.showRecognizedText(text)
 
         getEntryOf(text)
