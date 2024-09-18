@@ -17,6 +17,7 @@ interface OCRScannerContract {
     interface Presenter {
         fun onCameraSelected()
         fun onImagePickerSelected()
+        fun onImageCaptured(image: Bitmap)
     }
 
     interface Model {
