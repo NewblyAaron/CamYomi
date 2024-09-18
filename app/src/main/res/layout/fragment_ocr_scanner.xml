@@ -7,20 +7,17 @@
     android:gravity="center"
     tools:context=".ui.ocrscanner.OCRScannerFragment">
 
-    <TextView
-        android:id="@+id/recognized_text"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:text="Recognized text will display here"
-        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/definition_list"
@@ -30,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recognized_text"
+        app:layout_constraintTop_toBottomOf="@+id/compose_view"
         tools:listitem="@layout/definition_item" />
 
     <LinearLayout

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose)
     alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
@@ -27,6 +28,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
     buildTypes {
         release {
@@ -46,6 +48,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    packaging {
+        resources.excludes.add("META-INF/*")
     }
 }
 
@@ -70,6 +75,9 @@ dependencies {
     implementation(libs.room)
     implementation(libs.room.ktx)
     implementation(libs.room.paging)
+    implementation(libs.kuromoji)
+    implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.material3.android)
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
     testImplementation(libs.junit)
