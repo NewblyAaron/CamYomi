@@ -50,14 +50,13 @@ class OCRScannerPresenter @AssistedInject constructor(
             }
         )
     }
-
-    override fun onOCRResult(text: String) {
+    private fun onOCRResult(text: String) {
         view.showRecognizedText(text)
 
         getEntryOf(text)
     }
 
-    override fun onOCRFailure(e: Exception) {
+    private fun onOCRFailure(e: Exception) {
         Log.e("OCRScannerPresenter", e.localizedMessage, e)
         e.localizedMessage?.let { view.showError(it) }
     }
