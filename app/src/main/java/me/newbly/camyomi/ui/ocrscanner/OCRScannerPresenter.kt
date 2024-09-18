@@ -2,6 +2,7 @@ package me.newbly.camyomi.ui.ocrscanner
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.atilika.kuromoji.ipadic.Tokenizer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,6 +18,7 @@ class OCRScannerPresenter @AssistedInject constructor(
 ) : BasePresenter<OCRScannerContract.View>(view), OCRScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
+    private val tokenizer = Tokenizer()
 
     @AssistedFactory
     interface Factory {
@@ -53,22 +55,24 @@ class OCRScannerPresenter @AssistedInject constructor(
 
     private fun onOCRResult(text: String) {
         val tokens = tokenizer.tokenize(text)
-        val dictionaryForms = mutableSetOf<String>()
+        val wordMap = mutableMapOf<String, String>()
         var log = ""
         tokens.forEach {
             log += "${it.surface}\t${it.allFeatures}\n"
-            dictionaryForms.add(it.baseForm)
+            wordMap[it.surface] = it.baseForm
         }
         Log.d("OCRScannerPresenter", log)
 
-        view.showRecognizedText(text)
-
-        getEntryOf(text)
+        view.showRecognizedText(wordMap)
     }
 
     private fun onOCRFailure(e: Exception) {
         Log.e("OCRScannerPresenter", e.localizedMessage, e)
         e.localizedMessage?.let { view.showError(it) }
+    }
+
+    override fun onTextClicked(text: String) {
+        getEntryOf(text)
     }
 
     private fun getEntryOf(text: String) {
