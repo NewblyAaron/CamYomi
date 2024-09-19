@@ -56,6 +56,8 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     private val definitionAdapter = DefinitionAdapter()
     private var recognizedTextMap = mapOf<String, String>()
 
+    private var isFabExtended = false
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -142,6 +144,22 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         TODO("Not yet implemented")
     }
 
+    override fun toggleFabMenu() {
+        isFabExtended = when {
+            isFabExtended -> {
+                hideFabMenu()
+                false
+            }
+            !isFabExtended -> {
+                showFabMenu()
+                true
+            }
+            else -> {
+                throw IllegalStateException("that's not supposed to happen")
+            }
+        }
+    }
+
     override fun showDefinitions(entries: List<Entry>) {
         definitionAdapter.submitList(entries)
     }
@@ -174,8 +192,11 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             adapter = definitionAdapter
         }
 
-        launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
-        launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
+        hideFabMenu()
+
+        scanFab.setOnClickListener { presenter.onScanFabClicked() }
+        launchCameraButton.setOnClickListener { presenter.onCameraButtonClicked() }
+        launchPickerButton.setOnClickListener { presenter.onImagePickerButtonClicked() }
     }
 
     private fun hasCameraPermission(): Boolean {
@@ -183,6 +204,22 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             requireContext(),
             Manifest.permission.CAMERA,
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun hideFabMenu() {
+        binding.launchCameraButton.hide()
+        binding.launchPickerButton.hide()
+        binding.cameraText.visibility = View.GONE
+        binding.pickerText.visibility = View.GONE
+        binding.scanFab.shrink()
+    }
+
+    private fun showFabMenu() {
+        binding.launchCameraButton.show()
+        binding.launchPickerButton.show()
+        binding.cameraText.visibility = View.VISIBLE
+        binding.pickerText.visibility = View.VISIBLE
+        binding.scanFab.extend()
     }
 
     @OptIn(ExperimentalLayoutApi::class)

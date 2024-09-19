@@ -9,14 +9,16 @@ interface OCRScannerContract {
         fun launchCamera()
         fun displayProgress()
         fun hideProgress()
+        fun toggleFabMenu()
         fun showRecognizedText(wordMap: Map<String, String>)
         fun showDefinitions(entries: List<Entry>)
         fun showError(errorMessage: String)
     }
 
     interface Presenter {
-        fun onCameraSelected()
-        fun onImagePickerSelected()
+        fun onScanFabClicked()
+        fun onCameraButtonClicked()
+        fun onImagePickerButtonClicked()
         fun onImageCaptured(image: Bitmap)
         fun onTextClicked(text: String)
     }

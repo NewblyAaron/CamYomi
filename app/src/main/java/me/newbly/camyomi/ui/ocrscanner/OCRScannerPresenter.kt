@@ -33,11 +33,15 @@ class OCRScannerPresenter @AssistedInject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun onCameraSelected() {
+    override fun onScanFabClicked() {
+        view.toggleFabMenu()
+    }
+
+    override fun onCameraButtonClicked() {
         view.launchCamera()
     }
 
-    override fun onImagePickerSelected() {
+    override fun onImagePickerButtonClicked() {
         view.launchImagePicker()
     }
 
