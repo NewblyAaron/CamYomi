@@ -1,7 +1,7 @@
-package me.newbly.camyomi.mvp
+package me.newbly.camyomi.presentation.contract
 
 import android.graphics.Bitmap
-import me.newbly.camyomi.database.entity.Entry
+import me.newbly.camyomi.domain.entity.DictionaryEntry
 
 interface OCRScannerContract {
     interface View {
@@ -11,7 +11,7 @@ interface OCRScannerContract {
         fun hideProgress()
         fun toggleFabMenu()
         fun showRecognizedText(wordMap: Map<String, String>)
-        fun showDefinitions(entries: List<Entry>)
+        fun showDefinitions(entries: List<DictionaryEntry>)
         fun showError(errorMessage: String)
     }
 
@@ -31,7 +31,7 @@ interface OCRScannerContract {
         )
         suspend fun getEntries(
             text: String,
-            onSuccess: (List<Entry>) -> Unit,
+            onSuccess: (List<DictionaryEntry>) -> Unit,
             onFailure: (Exception) -> Unit
         )
     }

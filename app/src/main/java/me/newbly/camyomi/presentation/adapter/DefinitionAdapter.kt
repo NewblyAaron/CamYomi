@@ -5,18 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import me.newbly.camyomi.database.entity.Entry
+import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.databinding.DefinitionItemBinding
 
-class DefinitionAdapter : ListAdapter<Entry, DefinitionAdapter.ViewHolder>(DIFF_CALLBACK) {
+class DefinitionAdapter : ListAdapter<DictionaryEntry, DefinitionAdapter.ViewHolder>(DIFF_CALLBACK) {
     class ViewHolder(
         private val binding: DefinitionItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bindItem(entry: Entry) {
-            binding.kanjiReadingText.text = entry.getMainKanjiReading()
-            binding.kanaReadingText.text = entry.getMainKanaReading()
-            binding.otherReadingsText.text = entry.getOtherReadings()
-            binding.glossaryText.text = entry.getGlossary()
+        fun bindItem(dictionaryEntry: DictionaryEntry) {
+            binding.kanjiReadingText.text = dictionaryEntry.getMainKanjiReading()
+            binding.kanaReadingText.text = dictionaryEntry.getMainKanaReading()
+            binding.otherReadingsText.text = dictionaryEntry.getOtherReadings()
+            binding.glossaryText.text = dictionaryEntry.getGlossary()
         }
     }
 
@@ -37,12 +37,12 @@ class DefinitionAdapter : ListAdapter<Entry, DefinitionAdapter.ViewHolder>(DIFF_
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<Entry> = object: DiffUtil.ItemCallback<Entry>() {
-            override fun areItemsTheSame(oldItem: Entry, newItem: Entry): Boolean {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<DictionaryEntry> = object: DiffUtil.ItemCallback<DictionaryEntry>() {
+            override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Entry, newItem: Entry): Boolean {
+            override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
                 return oldItem == newItem
             }
         }

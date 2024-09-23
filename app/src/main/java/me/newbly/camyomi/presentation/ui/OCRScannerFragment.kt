@@ -33,9 +33,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import me.newbly.camyomi.database.entity.Entry
+import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
-import me.newbly.camyomi.mvp.OCRScannerContract
+import me.newbly.camyomi.presentation.contract.OCRScannerContract
 import me.newbly.camyomi.presentation.adapter.DefinitionAdapter
 import javax.inject.Inject
 
@@ -160,7 +160,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         }
     }
 
-    override fun showDefinitions(entries: List<Entry>) {
+    override fun showDefinitions(entries: List<DictionaryEntry>) {
         definitionAdapter.submitList(entries)
     }
 

@@ -10,13 +10,12 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.newbly.camyomi.mvp.BasePresenter
-import me.newbly.camyomi.mvp.OCRScannerContract
+import me.newbly.camyomi.presentation.contract.OCRScannerContract
 
 class OCRScannerPresenter @AssistedInject constructor(
     private val model: OCRScannerContract.Model,
-    @Assisted override val view: OCRScannerContract.View,
-) : BasePresenter<OCRScannerContract.View>(view), OCRScannerContract.Presenter {
+    @Assisted private val view: OCRScannerContract.View,
+) : OCRScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
     private val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
@@ -24,14 +23,6 @@ class OCRScannerPresenter @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(view: OCRScannerContract.View): OCRScannerPresenter
-    }
-
-    override fun start() {
-        TODO("Not yet implemented")
-    }
-
-    override fun stop() {
-        TODO("Not yet implemented")
     }
 
     override fun onScanFabClicked() {

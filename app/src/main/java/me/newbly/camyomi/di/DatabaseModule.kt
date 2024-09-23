@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import me.newbly.camyomi.database.JMdictDatabase
+import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
 import javax.inject.Singleton
 
 @Module

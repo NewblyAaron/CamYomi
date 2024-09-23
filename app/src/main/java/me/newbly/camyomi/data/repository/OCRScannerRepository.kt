@@ -1,13 +1,13 @@
-package me.newbly.camyomi.model
+package me.newbly.camyomi.data.repository
 
 import android.graphics.Bitmap
 import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognizer
-import me.newbly.camyomi.database.JMdictDatabase
-import me.newbly.camyomi.database.dao.EntryDao
-import me.newbly.camyomi.database.entity.Entry
-import me.newbly.camyomi.mvp.OCRScannerContract
+import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
+import me.newbly.camyomi.data.local.jmdictdb.dao.EntryDao
+import me.newbly.camyomi.domain.entity.DictionaryEntry
+import me.newbly.camyomi.presentation.contract.OCRScannerContract
 import javax.inject.Inject
 
 class OCRScannerModel @Inject constructor(
@@ -49,7 +49,7 @@ class OCRScannerModel @Inject constructor(
 
     override suspend fun getEntries(
         text: String,
-        onSuccess: (List<Entry>) -> Unit,
+        onSuccess: (List<DictionaryEntry>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         val entry = entryDao.findByText("$text%")
