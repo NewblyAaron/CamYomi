@@ -2,6 +2,7 @@ package me.newbly.camyomi.ui.ocrscanner
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.atilika.kuromoji.TokenizerBase
 import com.atilika.kuromoji.ipadic.Tokenizer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -18,7 +19,7 @@ class OCRScannerPresenter @AssistedInject constructor(
 ) : BasePresenter<OCRScannerContract.View>(view), OCRScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
-    private val tokenizer = Tokenizer()
+    private val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
 
     @AssistedFactory
     interface Factory {
@@ -33,11 +34,15 @@ class OCRScannerPresenter @AssistedInject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun onCameraSelected() {
+    override fun onScanFabClicked() {
+        view.toggleFabMenu()
+    }
+
+    override fun onCameraButtonClicked() {
         view.launchCamera()
     }
 
-    override fun onImagePickerSelected() {
+    override fun onImagePickerButtonClicked() {
         view.launchImagePicker()
     }
 
