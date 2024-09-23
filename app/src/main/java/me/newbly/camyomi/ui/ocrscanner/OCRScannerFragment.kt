@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,20 +27,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import me.newbly.camyomi.ui.adapter.DefinitionAdapter
 import me.newbly.camyomi.database.entity.Entry
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.mvp.OCRScannerContract
+import me.newbly.camyomi.ui.adapter.DefinitionAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class OCRScannerFragment : Fragment(), OCRScannerContract.View {
 
-    @Inject lateinit var presenterFactory: OCRScannerPresenter.Factory
+    @Inject
+    lateinit var presenterFactory: OCRScannerPresenter.Factory
     private lateinit var presenter: OCRScannerContract.Presenter
 
     private var _binding: FragmentOcrScannerBinding? = null
@@ -54,13 +56,16 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     private val definitionAdapter = DefinitionAdapter()
     private var recognizedTextMap = mapOf<String, String>()
 
+    private var isFabExtended = false
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         presenter = presenterFactory.create(this)
 
         cameraLauncher = registerForActivityResult(
-            ActivityResultContracts.TakePicturePreview()) { bitmap ->
+            ActivityResultContracts.TakePicturePreview()
+        ) { bitmap ->
             if (bitmap != null) {
                 presenter.onImageCaptured(bitmap)
             }
@@ -139,6 +144,22 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         TODO("Not yet implemented")
     }
 
+    override fun toggleFabMenu() {
+        isFabExtended = when {
+            isFabExtended -> {
+                hideFabMenu()
+                false
+            }
+            !isFabExtended -> {
+                showFabMenu()
+                true
+            }
+            else -> {
+                throw IllegalStateException("that's not supposed to happen")
+            }
+        }
+    }
+
     override fun showDefinitions(entries: List<Entry>) {
         definitionAdapter.submitList(entries)
     }
@@ -171,8 +192,11 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             adapter = definitionAdapter
         }
 
-        launchCameraButton.setOnClickListener { presenter.onCameraSelected() }
-        launchPickerButton.setOnClickListener { presenter.onImagePickerSelected() }
+        hideFabMenu()
+
+        scanFab.setOnClickListener { presenter.onScanFabClicked() }
+        launchCameraButton.setOnClickListener { presenter.onCameraButtonClicked() }
+        launchPickerButton.setOnClickListener { presenter.onImagePickerButtonClicked() }
     }
 
     private fun hasCameraPermission(): Boolean {
@@ -182,10 +206,27 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun hideFabMenu() {
+        binding.launchCameraButton.hide()
+        binding.launchPickerButton.hide()
+        binding.cameraText.visibility = View.GONE
+        binding.pickerText.visibility = View.GONE
+        binding.scanFab.shrink()
+    }
+
+    private fun showFabMenu() {
+        binding.launchCameraButton.show()
+        binding.launchPickerButton.show()
+        binding.cameraText.visibility = View.VISIBLE
+        binding.pickerText.visibility = View.VISIBLE
+        binding.scanFab.extend()
+    }
+
     @OptIn(ExperimentalLayoutApi::class)
+    @Preview
     @Composable
     private fun RecognizedJapaneseText(
-        map: Map<String, String>,
+        map: Map<String, String> = mapOf(),
     ) {
         val selectedText: MutableState<String> = rememberSaveable { mutableStateOf("") }
         val color = if (isSystemInDarkTheme()) Color.White else Color.Black
@@ -196,7 +237,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
                     .fillMaxWidth()
             ) {
                 if (map.isEmpty()) {
-                    Text("Recognized text will display here", color = color)
+                    Text("Recognized text will display here", color = color, fontSize = 20.sp)
                 } else {
                     for (word in map.entries) {
                         val style = if (word.key == selectedText.value) {

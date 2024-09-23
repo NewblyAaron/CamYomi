@@ -14,6 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        tools:composableName="me.newbly.camyomi.ui.ocrscanner.OCRScannerFragment.RecognizedJapaneseText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,30 +29,74 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/compose_view"
-        tools:listitem="@layout/definition_item" />
+        tools:listitem="@layout/definition_item" >
 
-    <LinearLayout
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/scan_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:text="Scan text"
+        app:icon="@drawable/baseline_document_scanner_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
+    <LinearLayout
+        android:id="@+id/launch_camera_fab_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/scan_fab"
+        app:layout_constraintEnd_toEndOf="@id/scan_fab">
+
+        <TextView
+            android:id="@+id/camera_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="Take a photo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/launch_camera_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Take photo"
-            app:icon="@android:drawable/ic_menu_camera" />
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:src="@drawable/baseline_camera_alt_24"
+            android:tooltipText="Take a photo"
+            app:fabSize="normal" />
 
-        <Button
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/launch_picker_fab_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/launch_camera_fab_entry"
+        app:layout_constraintEnd_toEndOf="@id/launch_camera_fab_entry">
+
+        <TextView
+            android:id="@+id/picker_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="Pick a photo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/launch_picker_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick image"
-            app:icon="@android:drawable/ic_menu_gallery" />
+            android:clickable="true"
+            android:src="@drawable/baseline_insert_photo_24"
+            app:fabSize="normal" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
