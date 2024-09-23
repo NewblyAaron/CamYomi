@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation.presenter
+package me.newbly.camyomi.presentation
 
 import android.graphics.Bitmap
 import android.util.Log

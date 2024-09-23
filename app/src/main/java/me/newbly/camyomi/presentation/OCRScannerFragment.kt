@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation.ui
+package me.newbly.camyomi.presentation
 
 import android.Manifest
 import android.content.Context
@@ -35,9 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
-import me.newbly.camyomi.presentation.adapter.DefinitionAdapter
 import me.newbly.camyomi.presentation.contract.OCRScannerContract
-import me.newbly.camyomi.presentation.presenter.OCRScannerPresenter
 import javax.inject.Inject
 
 @AndroidEntryPoint

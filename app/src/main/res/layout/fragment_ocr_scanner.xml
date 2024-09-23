@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".presentation.ui.OCRScannerFragment">
+    tools:context=".presentation.OCRScannerFragment">
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/compose_view"
@@ -14,7 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        tools:composableName="me.newbly.camyomi.presentation.ui.OCRScannerFragment.RecognizedJapaneseText"
+        tools:composableName="me.newbly.camyomi.presentation.OCRScannerFragment.RecognizedJapaneseText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
