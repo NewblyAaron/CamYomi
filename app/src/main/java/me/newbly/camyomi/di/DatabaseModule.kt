@@ -18,5 +18,6 @@ class DatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): JMdictDatabase =
         Room.databaseBuilder(context, JMdictDatabase::class.java, "jmdict")
             .createFromAsset("jmdict.db")
+            .fallbackToDestructiveMigration()
             .build()
 }
