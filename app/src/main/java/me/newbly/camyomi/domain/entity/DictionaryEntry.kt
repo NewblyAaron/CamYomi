@@ -1,11 +1,11 @@
-package me.newbly.camyomi.database.entity
+package me.newbly.camyomi.domain.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class Entry(
+@Entity(tableName = "entry")
+data class DictionaryEntry(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "keb") val keb: String?,
     @ColumnInfo(name = "ke_inf") val keInf: String?,

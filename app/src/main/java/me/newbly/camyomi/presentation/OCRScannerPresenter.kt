@@ -1,4 +1,4 @@
-package me.newbly.camyomi.ui.ocrscanner
+package me.newbly.camyomi.presentation
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -10,13 +10,15 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.newbly.camyomi.mvp.BasePresenter
-import me.newbly.camyomi.mvp.OCRScannerContract
+import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
+import me.newbly.camyomi.domain.usecase.GetRecognizedTextUseCase
+import me.newbly.camyomi.presentation.contract.OCRScannerContract
 
 class OCRScannerPresenter @AssistedInject constructor(
-    private val model: OCRScannerContract.Model,
-    @Assisted override val view: OCRScannerContract.View,
-) : BasePresenter<OCRScannerContract.View>(view), OCRScannerContract.Presenter {
+    @Assisted private val view: OCRScannerContract.View,
+    private val getRecognizedTextUseCase: GetRecognizedTextUseCase,
+    private val fetchDefinitionsUseCase: FetchDefinitionsUseCase
+) : OCRScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
     private val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
@@ -24,14 +26,6 @@ class OCRScannerPresenter @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(view: OCRScannerContract.View): OCRScannerPresenter
-    }
-
-    override fun start() {
-        TODO("Not yet implemented")
-    }
-
-    override fun stop() {
-        TODO("Not yet implemented")
     }
 
     override fun onScanFabClicked() {
@@ -47,15 +41,18 @@ class OCRScannerPresenter @AssistedInject constructor(
     }
 
     override fun onImageCaptured(image: Bitmap) {
-        model.processImageForOCR(
-            image,
-            onSuccess = { result ->
-                onOCRResult(result)
-            },
-            onFailure = { exception ->
-                onOCRFailure(exception)
+        presenterScope.launch {
+            try {
+                val result = getRecognizedTextUseCase.invoke(image)
+                onOCRResult(result.getOrThrow())
+            } catch (e: Exception) {
+                onOCRFailure(e)
             }
-        )
+        }
+    }
+
+    override fun onTextClicked(text: String) {
+        getDefinitionsOfText(text)
     }
 
     private fun onOCRResult(text: String) {
@@ -76,22 +73,15 @@ class OCRScannerPresenter @AssistedInject constructor(
         e.localizedMessage?.let { view.showError(it) }
     }
 
-    override fun onTextClicked(text: String) {
-        getEntryOf(text)
-    }
-
-    private fun getEntryOf(text: String) {
+    private fun getDefinitionsOfText(queryText: String) {
         presenterScope.launch {
-            model.getEntries(
-                text,
-                onSuccess = { entries ->
-                    view.showDefinitions(entries)
-                },
-                onFailure = { e ->
-                    Log.e("OCRScannerPresenter", e.localizedMessage, e)
-                    e.localizedMessage?.let { view.showError(it) }
-                }
-            )
+            try {
+                val result = fetchDefinitionsUseCase.invoke(queryText)
+
+                view.showDefinitions(result.getOrThrow())
+            } catch (e: Exception) {
+                e.localizedMessage?.let { view.showError(it) }
+            }
         }
     }
 }

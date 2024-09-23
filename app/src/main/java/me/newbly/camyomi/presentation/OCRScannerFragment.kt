@@ -1,4 +1,4 @@
-package me.newbly.camyomi.ui.ocrscanner
+package me.newbly.camyomi.presentation
 
 import android.Manifest
 import android.content.Context
@@ -33,10 +33,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import me.newbly.camyomi.database.entity.Entry
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
-import me.newbly.camyomi.mvp.OCRScannerContract
-import me.newbly.camyomi.ui.adapter.DefinitionAdapter
+import me.newbly.camyomi.domain.entity.DictionaryEntry
+import me.newbly.camyomi.presentation.contract.OCRScannerContract
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -147,20 +146,22 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     override fun toggleFabMenu() {
         isFabExtended = when {
             isFabExtended -> {
-                hideFabMenu()
+                binding.hideFabMenu()
                 false
             }
+
             !isFabExtended -> {
-                showFabMenu()
+                binding.showFabMenu()
                 true
             }
+
             else -> {
                 throw IllegalStateException("that's not supposed to happen")
             }
         }
     }
 
-    override fun showDefinitions(entries: List<Entry>) {
+    override fun showDefinitions(entries: List<DictionaryEntry>) {
         definitionAdapter.submitList(entries)
     }
 
@@ -199,28 +200,26 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         launchPickerButton.setOnClickListener { presenter.onImagePickerButtonClicked() }
     }
 
-    private fun hasCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.CAMERA,
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun FragmentOcrScannerBinding.hideFabMenu() {
+        launchCameraButton.hide()
+        launchPickerButton.hide()
+        cameraText.visibility = View.GONE
+        pickerText.visibility = View.GONE
+        scanFab.shrink()
     }
 
-    private fun hideFabMenu() {
-        binding.launchCameraButton.hide()
-        binding.launchPickerButton.hide()
-        binding.cameraText.visibility = View.GONE
-        binding.pickerText.visibility = View.GONE
-        binding.scanFab.shrink()
+    private fun FragmentOcrScannerBinding.showFabMenu() {
+        launchCameraButton.show()
+        launchPickerButton.show()
+        cameraText.visibility = View.VISIBLE
+        pickerText.visibility = View.VISIBLE
+        scanFab.extend()
     }
 
-    private fun showFabMenu() {
-        binding.launchCameraButton.show()
-        binding.launchPickerButton.show()
-        binding.cameraText.visibility = View.VISIBLE
-        binding.pickerText.visibility = View.VISIBLE
-        binding.scanFab.extend()
-    }
+    private fun hasCameraPermission(): Boolean = ContextCompat.checkSelfPermission(
+        requireContext(),
+        Manifest.permission.CAMERA,
+    ) == PackageManager.PERMISSION_GRANTED
 
     @OptIn(ExperimentalLayoutApi::class)
     @Preview

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/OCRScannerFragment"
-        android:name="me.newbly.camyomi.ui.ocrscanner.OCRScannerFragment"
+        android:name="me.newbly.camyomi.presentation.OCRScannerFragment"
         android:label="fragment_ocr_scanner"
         tools:layout="@layout/fragment_ocr_scanner" />
 </navigation>
