@@ -1,4 +1,4 @@
-package me.newbly.camyomi.di.module
+package me.newbly.camyomi.di
 
 import dagger.Binds
 import dagger.Module
