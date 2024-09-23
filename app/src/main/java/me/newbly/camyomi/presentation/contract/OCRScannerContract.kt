@@ -22,17 +22,4 @@ interface OCRScannerContract {
         fun onImageCaptured(image: Bitmap)
         fun onTextClicked(text: String)
     }
-
-    interface Model {
-        fun processImageForOCR(
-            image: Bitmap,
-            onSuccess: (String) -> Unit,
-            onFailure: (Exception) -> Unit
-        )
-        suspend fun getEntries(
-            text: String,
-            onSuccess: (List<DictionaryEntry>) -> Unit,
-            onFailure: (Exception) -> Unit
-        )
-    }
 }

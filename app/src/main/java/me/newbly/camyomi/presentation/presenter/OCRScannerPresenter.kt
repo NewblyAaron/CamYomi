@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation.ui
+package me.newbly.camyomi.presentation.presenter
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -10,11 +10,14 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
+import me.newbly.camyomi.domain.usecase.GetRecognizedTextUseCase
 import me.newbly.camyomi.presentation.contract.OCRScannerContract
 
 class OCRScannerPresenter @AssistedInject constructor(
-    private val model: OCRScannerContract.Model,
     @Assisted private val view: OCRScannerContract.View,
+    private val getRecognizedTextUseCase: GetRecognizedTextUseCase,
+    private val fetchDefinitionsUseCase: FetchDefinitionsUseCase
 ) : OCRScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
@@ -38,15 +41,18 @@ class OCRScannerPresenter @AssistedInject constructor(
     }
 
     override fun onImageCaptured(image: Bitmap) {
-        model.processImageForOCR(
-            image,
-            onSuccess = { result ->
-                onOCRResult(result)
-            },
-            onFailure = { exception ->
-                onOCRFailure(exception)
+        presenterScope.launch {
+            try {
+                val result = getRecognizedTextUseCase.invoke(image)
+                onOCRResult(result.getOrThrow())
+            } catch (e: Exception) {
+                onOCRFailure(e)
             }
-        )
+        }
+    }
+
+    override fun onTextClicked(text: String) {
+        getDefinitionsOfText(text)
     }
 
     private fun onOCRResult(text: String) {
@@ -67,22 +73,15 @@ class OCRScannerPresenter @AssistedInject constructor(
         e.localizedMessage?.let { view.showError(it) }
     }
 
-    override fun onTextClicked(text: String) {
-        getEntryOf(text)
-    }
-
-    private fun getEntryOf(text: String) {
+    private fun getDefinitionsOfText(queryText: String) {
         presenterScope.launch {
-            model.getEntries(
-                text,
-                onSuccess = { entries ->
-                    view.showDefinitions(entries)
-                },
-                onFailure = { e ->
-                    Log.e("OCRScannerPresenter", e.localizedMessage, e)
-                    e.localizedMessage?.let { view.showError(it) }
-                }
-            )
+            try {
+                val result = fetchDefinitionsUseCase.invoke(queryText)
+
+                view.showDefinitions(result.getOrThrow())
+            } catch (e: Exception) {
+                e.localizedMessage?.let { view.showError(it) }
+            }
         }
     }
 }
