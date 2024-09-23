@@ -1,4 +1,4 @@
-package me.newbly.camyomi.ui.ocrscanner
+package me.newbly.camyomi.presentation.ui
 
 import android.Manifest
 import android.content.Context
@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.newbly.camyomi.database.entity.Entry
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.mvp.OCRScannerContract
-import me.newbly.camyomi.ui.adapter.DefinitionAdapter
+import me.newbly.camyomi.presentation.adapter.DefinitionAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint

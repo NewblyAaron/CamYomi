@@ -1,4 +1,4 @@
-package me.newbly.camyomi.ui.ocrscanner
+package me.newbly.camyomi.presentation.ui
 
 import android.graphics.Bitmap
 import android.util.Log
