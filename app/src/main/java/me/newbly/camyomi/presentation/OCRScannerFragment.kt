@@ -177,7 +177,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     override fun showError(errorMessage: String) {
         Toast.makeText(
             context,
-            "Error in processing image!\n$errorMessage",
+            "Error! $errorMessage",
             Toast.LENGTH_SHORT
         ).show()
     }

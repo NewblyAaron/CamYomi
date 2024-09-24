@@ -69,8 +69,8 @@ class OCRScannerPresenter @AssistedInject constructor(
     }
 
     private fun onOCRFailure(e: Exception) {
-        Log.e("OCRScannerPresenter", e.localizedMessage, e)
-        e.localizedMessage?.let { view.showError(it) }
+        Log.e("OCRScannerPresenter", e.message, e)
+        e.message?.let { view.showError(it) }
     }
 
     private fun getDefinitionsOfText(queryText: String) {
@@ -80,7 +80,7 @@ class OCRScannerPresenter @AssistedInject constructor(
 
                 view.showDefinitions(result.getOrThrow())
             } catch (e: Exception) {
-                e.localizedMessage?.let { view.showError(it) }
+                e.message?.let { view.showError(it) }
             }
         }
     }
