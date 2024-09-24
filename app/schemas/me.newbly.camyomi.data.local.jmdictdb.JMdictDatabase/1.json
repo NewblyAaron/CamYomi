@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9bd99984450c8ca72ca8c250b93a3acd",
+    "identityHash": "66ebf197c2fa7f6c9f7fc95360ba2ce8",
     "entities": [
       {
-        "tableName": "Entry",
+        "tableName": "entry",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `keb` TEXT, `ke_inf` TEXT, `ke_pri` TEXT, `re` TEXT, `re_nokanji` TEXT, `re_restr` TEXT, `re_inf` TEXT, `re_pri` TEXT, `ant` TEXT, `pos` TEXT, `field` TEXT, `dial` TEXT, `gloss` TEXT, `ex_text` TEXT, `ex_sent` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
@@ -118,7 +118,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9bd99984450c8ca72ca8c250b93a3acd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '66ebf197c2fa7f6c9f7fc95360ba2ce8')"
     ]
   }
 }

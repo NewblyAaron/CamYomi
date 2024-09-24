@@ -3,7 +3,7 @@ package me.newbly.camyomi
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
-import me.newbly.camyomi.database.JMdictDatabase
+import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before

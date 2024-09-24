@@ -1,4 +1,4 @@
-package me.newbly.camyomi.di.module
+package me.newbly.camyomi.di
 
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer

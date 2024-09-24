@@ -1,4 +1,4 @@
-package me.newbly.camyomi.di.module
+package me.newbly.camyomi.di
 
 import android.content.Context
 import androidx.room.Room
@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import me.newbly.camyomi.database.JMdictDatabase
+import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
 import javax.inject.Singleton
 
 @Module
@@ -18,5 +18,6 @@ class DatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): JMdictDatabase =
         Room.databaseBuilder(context, JMdictDatabase::class.java, "jmdict")
             .createFromAsset("jmdict.db")
+            .fallbackToDestructiveMigration()
             .build()
 }
