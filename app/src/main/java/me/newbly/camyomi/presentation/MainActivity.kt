@@ -10,7 +10,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import me.newbly.camyomi.R
 import me.newbly.camyomi.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
