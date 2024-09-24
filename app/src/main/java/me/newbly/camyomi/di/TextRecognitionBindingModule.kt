@@ -12,8 +12,8 @@ import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 @InstallIn(ActivityComponent::class)
 abstract class TextRecognitionBindingModule {
     @Binds
-    abstract fun provideTextRecognitionRepository(repository: TextRecognitionRepository): TextRecognitionContract.Repository
+    abstract fun provideRepository(repository: TextRecognitionRepository): TextRecognitionContract.Repository
 
     @Binds
-    abstract fun provideTextRecognitionService(service: MLKitService): TextRecognitionContract.DataSource
+    abstract fun provideDataSource(service: MLKitService): TextRecognitionContract.DataSource
 }

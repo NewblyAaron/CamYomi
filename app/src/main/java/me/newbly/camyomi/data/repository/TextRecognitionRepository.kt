@@ -11,12 +11,9 @@ import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 import javax.inject.Inject
 
 class TextRecognitionRepository @Inject constructor(
-    database: JMdictDatabase,
     private val mlKitService: MLKitService
 ): TextRecognitionContract.Repository {
     private class NoJapaneseTextExtractedException(message: String): Exception(message)
-
-    private val dictionaryEntryDao: DictionaryEntryDao = database.entryDao()
 
     private fun extractJapaneseText(text: String): String {
         // Regular expression to match Japanese characters (Hiragana, Katakana, and Kanji)
@@ -38,20 +35,6 @@ class TextRecognitionRepository @Inject constructor(
                 throw NoJapaneseTextExtractedException("No japanese text was found.")
             }
             Result.success(formattedText)
-        } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getDictionaryEntries(queryText: String): Result<List<DictionaryEntry>> {
-        return try {
-            val entries = dictionaryEntryDao.findByText(queryText)
-            if (entries.isEmpty()) {
-                throw NoSuchElementException("No entries found.")
-            }
-
-            Result.success(entries)
         } catch (e: Exception) {
             Log.e(TAG_NAME, e.message, e)
             Result.failure(e)

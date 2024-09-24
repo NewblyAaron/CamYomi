@@ -10,5 +10,5 @@ import me.newbly.camyomi.domain.entity.DictionaryEntry
     version = 1
 )
 abstract class JMdictDatabase : RoomDatabase() {
-    abstract fun entryDao(): DictionaryEntryDao
+    abstract fun dictionaryEntryDao(): DictionaryEntryDao
 }

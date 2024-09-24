@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import me.newbly.camyomi.data.local.app.AppDatabase
 import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
 import javax.inject.Singleton
 
@@ -15,9 +16,15 @@ import javax.inject.Singleton
 class DatabaseModule {
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): JMdictDatabase =
+    fun provideJMdictDatabase(@ApplicationContext context: Context): JMdictDatabase =
         Room.databaseBuilder(context, JMdictDatabase::class.java, "jmdict")
             .createFromAsset("jmdict.db")
             .fallbackToDestructiveMigration()
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(context, AppDatabase::class.java, "app_db")
             .build()
 }
