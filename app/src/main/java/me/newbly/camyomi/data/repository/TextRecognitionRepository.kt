@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
-import me.newbly.camyomi.data.local.jmdictdb.dao.EntryDao
+import me.newbly.camyomi.data.local.jmdictdb.dao.DictionaryEntryDao
 import me.newbly.camyomi.data.local.mlkit.MLKitService
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
@@ -14,7 +14,7 @@ class TextRecognitionRepository @Inject constructor(
     database: JMdictDatabase,
     private val mlKitService: MLKitService
 ): TextRecognitionContract.Repository {
-    private val entryDao: EntryDao = database.entryDao()
+    private val dictionaryEntryDao: DictionaryEntryDao = database.entryDao()
 
     private fun extractJapaneseText(text: String): String {
         // Regular expression to match Japanese characters (Hiragana, Katakana, and Kanji)
@@ -41,7 +41,7 @@ class TextRecognitionRepository @Inject constructor(
 
     override suspend fun getDictionaryEntries(queryText: String): Result<List<DictionaryEntry>> {
         return try {
-            val entries = entryDao.findByText(queryText)
+            val entries = dictionaryEntryDao.findByText(queryText)
             if (entries.isEmpty()) {
                 throw NoSuchElementException()
             }

@@ -5,7 +5,7 @@ import androidx.room.Query
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 
 @Dao
-interface EntryDao {
+interface DictionaryEntryDao {
     @Query(
         "SELECT * FROM entry WHERE keb LIKE :query OR re LIKE :query"
     )
