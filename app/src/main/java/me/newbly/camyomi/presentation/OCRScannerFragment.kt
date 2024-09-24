@@ -106,7 +106,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOcrScannerBinding.inflate(layoutInflater)
+        _binding = FragmentOcrScannerBinding.inflate(inflater, container, false)
         binding.bindView()
 
         return binding.root

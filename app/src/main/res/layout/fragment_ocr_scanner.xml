@@ -7,29 +7,35 @@
     android:gravity="center"
     tools:context=".presentation.OCRScannerFragment">
 
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/compose_view"
+    <FrameLayout
+        android:id="@+id/compose_frame"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        tools:composableName="me.newbly.camyomi.presentation.OCRScannerFragment.RecognizedJapaneseText"
+        android:layout_height="100dp"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/compose_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:composableName="me.newbly.camyomi.presentation.OCRScannerFragment.RecognizedJapaneseText" />
+        </ScrollView>
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/definition_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/compose_view"
-        tools:listitem="@layout/definition_item" >
+        app:layout_constraintTop_toBottomOf="@id/compose_frame"
+        tools:listitem="@layout/definition_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 
