@@ -12,20 +12,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
 import me.newbly.camyomi.domain.usecase.GetRecognizedTextUseCase
-import me.newbly.camyomi.presentation.contract.OCRScannerContract
+import me.newbly.camyomi.presentation.contract.ScannerContract
 
-class OCRScannerPresenter @AssistedInject constructor(
-    @Assisted private val view: OCRScannerContract.View,
+class ScannerPresenter @AssistedInject constructor(
+    @Assisted private val view: ScannerContract.View,
     private val getRecognizedTextUseCase: GetRecognizedTextUseCase,
     private val fetchDefinitionsUseCase: FetchDefinitionsUseCase
-) : OCRScannerContract.Presenter {
+) : ScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
     private val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
 
     @AssistedFactory
     interface Factory {
-        fun create(view: OCRScannerContract.View): OCRScannerPresenter
+        fun create(view: ScannerContract.View): ScannerPresenter
     }
 
     override fun onScanFabClicked() {

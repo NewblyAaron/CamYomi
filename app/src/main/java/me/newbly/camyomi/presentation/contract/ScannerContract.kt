@@ -3,7 +3,7 @@ package me.newbly.camyomi.presentation.contract
 import android.graphics.Bitmap
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 
-interface OCRScannerContract {
+interface ScannerContract {
     interface View {
         fun launchImagePicker()
         fun launchCamera()

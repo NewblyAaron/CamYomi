@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".presentation.OCRScannerFragment">
+    tools:context=".presentation.ScannerFragment">
 
     <ScrollView
         android:id="@+id/compose_frame"
@@ -20,7 +20,7 @@
             android:id="@+id/compose_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:composableName="me.newbly.camyomi.presentation.OCRScannerFragment.RecognizedJapaneseText" />
+            tools:composableName="me.newbly.camyomi.presentation.ScannerFragment.RecognizedJapaneseText" />
     </ScrollView>
 
     <androidx.recyclerview.widget.RecyclerView

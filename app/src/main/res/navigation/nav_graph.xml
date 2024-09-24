@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_scanner"
-        android:name="me.newbly.camyomi.presentation.OCRScannerFragment"
-        android:label="fragment_ocr_scanner"
-        tools:layout="@layout/fragment_ocr_scanner" />
+        android:name="me.newbly.camyomi.presentation.ScannerFragment"
+        android:label="fragment_scanner"
+        tools:layout="@layout/fragment_scanner" />
     <fragment
         android:id="@+id/navigation_recent"
         android:name="me.newbly.camyomi.presentation.RecentlyScannedFragment"
