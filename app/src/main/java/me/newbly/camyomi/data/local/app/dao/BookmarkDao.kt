@@ -15,5 +15,5 @@ interface BookmarkDao {
     fun delete(bookmark: Bookmark)
 
     @Query("SELECT * FROM bookmark")
-    fun getBookmarks()
+    suspend fun getBookmarks(): List<Bookmark>
 }

@@ -15,5 +15,5 @@ interface RecentScanDao {
     fun deleteOldScans()
 
     @Query("SELECT * FROM recently_scanned")
-    fun getRecentlyScanned()
+    suspend fun getRecentlyScanned(): List<RecentScan>
 }
