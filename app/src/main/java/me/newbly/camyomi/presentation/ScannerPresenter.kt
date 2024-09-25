@@ -12,12 +12,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
 import me.newbly.camyomi.domain.usecase.GetRecognizedTextUseCase
+import me.newbly.camyomi.domain.usecase.SaveToRecentlyScannedUseCase
 import me.newbly.camyomi.presentation.contract.ScannerContract
 
 class ScannerPresenter @AssistedInject constructor(
     @Assisted private val view: ScannerContract.View,
     private val getRecognizedTextUseCase: GetRecognizedTextUseCase,
-    private val fetchDefinitionsUseCase: FetchDefinitionsUseCase
+    private val fetchDefinitionsUseCase: FetchDefinitionsUseCase,
+    private val saveToRecentlyScannedUseCase: SaveToRecentlyScannedUseCase
 ) : ScannerContract.Presenter {
 
     private val presenterScope = CoroutineScope(Dispatchers.Main)
@@ -43,8 +45,8 @@ class ScannerPresenter @AssistedInject constructor(
     override fun onImageCaptured(image: Bitmap) {
         presenterScope.launch {
             try {
-                val result = getRecognizedTextUseCase.invoke(image)
-                onOCRResult(result.getOrThrow())
+                val result = getRecognizedTextUseCase.invoke(image).getOrThrow()
+                onOCRResult(result)
             } catch (e: Exception) {
                 onOCRFailure(e)
             }
@@ -55,7 +57,9 @@ class ScannerPresenter @AssistedInject constructor(
         getDefinitionsOfText(text)
     }
 
-    private fun onOCRResult(text: String) {
+    private suspend fun onOCRResult(text: String) {
+        saveToRecentlyScannedUseCase.invoke(text)
+
         val tokens = tokenizer.tokenize(text)
         val wordMap = mutableMapOf<String, String>()
         var log = ""
@@ -69,7 +73,6 @@ class ScannerPresenter @AssistedInject constructor(
     }
 
     private fun onOCRFailure(e: Exception) {
-        Log.e("OCRScannerPresenter", e.message, e)
         e.message?.let { view.showError(it) }
     }
 
