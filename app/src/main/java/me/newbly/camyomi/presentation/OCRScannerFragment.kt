@@ -31,7 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
@@ -192,6 +194,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = definitionAdapter
         }
+        definitionList.addItemDecoration(DividerItemDecoration(definitionList.context, RecyclerView.VERTICAL))
 
         hideFabMenu()
 
