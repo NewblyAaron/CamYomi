@@ -9,11 +9,11 @@ import me.newbly.camyomi.domain.entity.RecentScan
 @Dao
 interface RecentScanDao {
     @Insert
-    fun insert(recentScan: RecentScan)
+    suspend fun insert(recentScan: RecentScan)
 
     @Query("DELETE FROM recently_scanned WHERE id IN (SELECT id FROM recently_scanned ORDER BY scanned_at DESC LIMIT 10)")
-    fun deleteOldScans()
+    suspend fun deleteOldScans()
 
-    @Query("SELECT * FROM recently_scanned")
+    @Query("SELECT * FROM recently_scanned GROUP BY text ORDER BY scanned_at DESC LIMIT 10")
     suspend fun getRecentlyScanned(): List<RecentScan>
 }

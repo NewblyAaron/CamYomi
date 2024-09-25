@@ -7,8 +7,8 @@ interface AppDbContract {
     interface Repository {
         suspend fun getRecentlyScanned(): Result<List<RecentScan>>
         suspend fun getBookmarks(): Result<List<Bookmark>>
-        fun saveToRecentlyScanned(scannedText: String)
-        fun addBookmark(dictionaryEntryId: Int)
-        fun removeBookmark(bookmarkId: Int)
+        suspend fun saveToRecentlyScanned(scannedText: String): Result<Boolean>
+        suspend fun addBookmark(dictionaryEntryId: Int): Result<Boolean>
+        suspend fun removeBookmark(bookmarkId: Int): Result<Boolean>
     }
 }
