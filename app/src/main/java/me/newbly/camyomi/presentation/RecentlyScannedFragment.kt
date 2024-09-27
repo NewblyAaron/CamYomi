@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +47,9 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
     }
 
     override fun navigateToScanner(queryText: String) {
-        TODO("Not yet implemented")
+        val action = RecentlyScannedFragmentDirections.actionGlobalNavigationScanner()
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("recentText", queryText)
+        findNavController().navigate(action)
     }
 
     override fun showRecentScans(recentScans: List<RecentScan>) {
@@ -62,6 +65,7 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
     }
 
     private fun FragmentRecentlyScannedBinding.bindView() {
+        recentScanAdapter.setOnListItemClickListener { presenter.onRecentScanClicked(it) }
         recentScanList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recentScanAdapter

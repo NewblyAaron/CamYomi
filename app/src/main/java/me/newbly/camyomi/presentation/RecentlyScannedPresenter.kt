@@ -33,6 +33,6 @@ class RecentlyScannedPresenter @AssistedInject constructor(
     }
 
     override fun onRecentScanClicked(recentScan: RecentScan) {
-        TODO("Not yet implemented")
+        view.navigateToScanner(recentScan.text)
     }
 }

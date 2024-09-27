@@ -9,6 +9,8 @@ import me.newbly.camyomi.databinding.ScannedItemBinding
 import me.newbly.camyomi.domain.entity.RecentScan
 
 class RecentScanAdapter: ListAdapter<RecentScan, RecentScanAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private var onListItemClick: ((RecentScan) -> Unit)? = null
+
     class ViewHolder(
         private val binding: ScannedItemBinding
     ): RecyclerView.ViewHolder(binding.root) {
@@ -31,6 +33,11 @@ class RecentScanAdapter: ListAdapter<RecentScan, RecentScanAdapter.ViewHolder>(D
         val repoItem = getItem(position)
 
         holder.bindItem(repoItem)
+        holder.itemView.setOnClickListener { onListItemClick?.invoke(repoItem) }
+    }
+
+    fun setOnListItemClickListener(l: (RecentScan) -> Unit) {
+        onListItemClick = l
     }
 
     companion object {

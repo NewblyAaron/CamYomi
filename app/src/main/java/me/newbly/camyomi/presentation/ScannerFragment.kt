@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,6 +109,15 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     ): View {
         _binding = FragmentScannerBinding.inflate(inflater, container, false)
         binding.bindView()
+
+        findNavController().currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String>("recentText")
+            ?.observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()) {
+                    presenter.loadPassedArgs(it)
+                }
+            }
 
         return binding.root
     }

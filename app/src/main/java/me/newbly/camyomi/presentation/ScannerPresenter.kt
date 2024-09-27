@@ -10,6 +10,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
 import me.newbly.camyomi.domain.usecase.GetRecognizedTextUseCase
 import me.newbly.camyomi.domain.usecase.SaveToRecentlyScannedUseCase
@@ -46,34 +47,37 @@ class ScannerPresenter @AssistedInject constructor(
         presenterScope.launch {
             try {
                 val result = getRecognizedTextUseCase.invoke(image).getOrThrow()
-                onOCRResult(result)
+                saveToRecentlyScannedUseCase.invoke(result)
+                tokenizeText(result)
             } catch (e: Exception) {
-                onOCRFailure(e)
+                e.message?.let { view.showError(it) }
             }
         }
     }
 
-    override fun onTextClicked(text: String) {
-        getDefinitionsOfText(text)
+    override fun onTextClicked(selectedText: String) {
+        getDefinitionsOfText(selectedText)
     }
 
-    private suspend fun onOCRResult(text: String) {
-        saveToRecentlyScannedUseCase.invoke(text)
-
-        val tokens = tokenizer.tokenize(text)
-        val wordMap = mutableMapOf<String, String>()
-        var log = ""
-        tokens.forEach {
-            log += "${it.surface}\t${it.allFeatures}\n"
-            wordMap[it.surface] = it.baseForm
+    override fun loadPassedArgs(passedText: String) {
+        presenterScope.launch {
+            tokenizeText(passedText)
         }
-        Log.d("OCRScannerPresenter", log)
-
-        view.showRecognizedText(wordMap)
     }
 
-    private fun onOCRFailure(e: Exception) {
-        e.message?.let { view.showError(it) }
+    private suspend fun tokenizeText(text: String) {
+        withContext(Dispatchers.IO) {
+            val tokens = tokenizer.tokenize(text)
+            val wordMap = mutableMapOf<String, String>()
+            var log = ""
+            tokens.forEach {
+                log += "${it.surface}\t${it.allFeatures}\n"
+                wordMap[it.surface] = it.baseForm
+            }
+            Log.d("OCRScannerPresenter", log)
+
+            view.showRecognizedText(wordMap)
+        }
     }
 
     private fun getDefinitionsOfText(queryText: String) {

@@ -20,6 +20,7 @@ interface ScannerContract {
         fun onCameraButtonClicked()
         fun onImagePickerButtonClicked()
         fun onImageCaptured(image: Bitmap)
-        fun onTextClicked(text: String)
+        fun onTextClicked(selectedText: String)
+        fun loadPassedArgs(passedText: String)
     }
 }
