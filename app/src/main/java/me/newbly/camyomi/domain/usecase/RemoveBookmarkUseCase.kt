@@ -1,10 +1,10 @@
 package me.newbly.camyomi.domain.usecase
 
-import me.newbly.camyomi.data.repository.AppDbRepository
+import me.newbly.camyomi.presentation.contract.AppDbContract
 import javax.inject.Inject
 
 class RemoveBookmarkUseCase @Inject constructor(
-    private val repository: AppDbRepository
+    private val repository: AppDbContract.Repository
 ) {
     suspend operator fun invoke(bookmarkId: Int): Result<Boolean> =
         repository.removeBookmark(bookmarkId)
