@@ -9,11 +9,14 @@ import me.newbly.camyomi.domain.entity.Bookmark
 @Dao
 interface BookmarkDao {
     @Insert
-    fun insert(bookmark: Bookmark)
+    suspend fun insert(bookmark: Bookmark)
 
-    @Delete
-    fun delete(bookmark: Bookmark)
+    @Query("DELETE FROM bookmarks WHERE entry_id = :entryId")
+    suspend fun delete(entryId: Int)
 
-    @Query("SELECT * FROM bookmark")
+    @Query("SELECT * FROM bookmarks")
     suspend fun getBookmarks(): List<Bookmark>
+
+    @Query("SELECT COUNT(*) FROM bookmarks WHERE entry_id = :entryId")
+    suspend fun isBookmarked(entryId: Int): Int
 }

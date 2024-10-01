@@ -19,6 +19,7 @@ interface ScannerContract {
         fun onScanFabClicked()
         fun onCameraButtonClicked()
         fun onImagePickerButtonClicked()
+        suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean
         fun onImageCaptured(image: Bitmap)
         fun onTextClicked(selectedText: String)
         fun loadPassedArgs(passedText: String)

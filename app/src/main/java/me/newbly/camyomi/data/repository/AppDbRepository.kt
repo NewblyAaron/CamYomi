@@ -18,6 +18,7 @@ class AppDbRepository @Inject constructor(
             val list = recentScanDao.getRecentlyScanned()
             Result.success(list)
         } catch (e: Exception) {
+            Log.e(TAG_NAME, e.message, e)
             Result.failure(e)
         }
     }
@@ -38,7 +39,16 @@ class AppDbRepository @Inject constructor(
     }
 
     override suspend fun addBookmark(dictionaryEntryId: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+        return try {
+            val newBookmark = Bookmark(
+                entryId = dictionaryEntryId
+            )
+            bookmarkDao.insert(newBookmark)
+            Result.success(true)
+        } catch (e: Exception) {
+            Log.e(TAG_NAME, e.message, e)
+            Result.failure(e)
+        }
     }
 
     override suspend fun removeBookmark(bookmarkId: Int): Result<Boolean> {

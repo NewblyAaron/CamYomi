@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c891a7da66faeaff1eb6fe63a558805e",
+    "identityHash": "fee20467275431d64f693e64b020c9ef",
     "entities": [
       {
         "tableName": "recently_scanned",
@@ -37,8 +37,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "Bookmark",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `entryId` INTEGER NOT NULL, `bookmarked_at` INTEGER NOT NULL)",
+        "tableName": "bookmarks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `entry_id` INTEGER NOT NULL, `bookmarked_at` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -48,7 +48,7 @@
           },
           {
             "fieldPath": "entryId",
-            "columnName": "entryId",
+            "columnName": "entry_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -65,14 +65,24 @@
             "id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_bookmarks_entry_id",
+            "unique": true,
+            "columnNames": [
+              "entry_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_bookmarks_entry_id` ON `${TABLE_NAME}` (`entry_id`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c891a7da66faeaff1eb6fe63a558805e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fee20467275431d64f693e64b020c9ef')"
     ]
   }
 }

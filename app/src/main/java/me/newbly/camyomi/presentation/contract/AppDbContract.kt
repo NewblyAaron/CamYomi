@@ -10,5 +10,6 @@ interface AppDbContract {
         suspend fun saveToRecentlyScanned(scannedText: String): Result<Boolean>
         suspend fun addBookmark(dictionaryEntryId: Int): Result<Boolean>
         suspend fun removeBookmark(bookmarkId: Int): Result<Boolean>
+        suspend fun isBookmarked(dictionaryEntryId: Int): Result<Boolean>
     }
 }

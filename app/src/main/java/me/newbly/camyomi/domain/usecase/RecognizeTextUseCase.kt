@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 import javax.inject.Inject
 
-class GetRecognizedTextUseCase @Inject constructor(
+class RecognizeTextUseCase @Inject constructor(
     private val repository: TextRecognitionContract.Repository
 ) {
     suspend operator fun invoke(bitmapImage: Bitmap): Result<String> =

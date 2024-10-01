@@ -31,9 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/compose_frame"
-        tools:listitem="@layout/definition_item">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/definition_item" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/scan_fab"

@@ -31,11 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import me.newbly.camyomi.databinding.FragmentScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.ScannerContract
@@ -200,6 +202,12 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             }
         }
 
+        definitionAdapter.setBookmarkButtonOnClickListener {
+            lifecycleScope.launch {
+                it.isBookmarked = presenter.onBookmarkButtonClicked(it.id)
+                definitionAdapter.notifyItemChanged(definitionAdapter.currentList.indexOf(it))
+            }
+        }
         definitionList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = definitionAdapter
