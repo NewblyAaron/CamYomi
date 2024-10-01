@@ -46,6 +46,11 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun navigateToScanner(queryText: String) {
         val action = RecentlyScannedFragmentDirections.actionGlobalNavigationScanner()
         findNavController().previousBackStackEntry?.savedStateHandle?.set("recentText", queryText)

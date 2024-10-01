@@ -42,7 +42,7 @@ data class DictionaryEntry(
         val kanjiReadings = keb?.split(";") ?: listOf()
         val kanaReadings = re?.split(";") ?: listOf()
 
-        var formattedString: String = ""
+        var formattedString = ""
 
         formattedString += "Other kanji readings: "
         if (kanjiReadings.isEmpty()) {
@@ -76,7 +76,7 @@ data class DictionaryEntry(
         if (gloss.isNullOrBlank()) return ""
 
         val glossary = gloss.replace("-None", "").split("|")
-        var formattedString: String = ""
+        var formattedString = ""
 
         for (def in glossary) {
             formattedString += "• $def\n"

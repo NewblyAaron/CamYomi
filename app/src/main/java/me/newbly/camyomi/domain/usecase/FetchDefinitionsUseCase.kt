@@ -3,7 +3,6 @@ package me.newbly.camyomi.domain.usecase
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.AppDbContract
 import me.newbly.camyomi.presentation.contract.JMdictContract
-import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 import javax.inject.Inject
 
 class FetchDefinitionsUseCase @Inject constructor(
