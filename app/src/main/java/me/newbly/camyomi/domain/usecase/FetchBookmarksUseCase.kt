@@ -5,18 +5,16 @@ import me.newbly.camyomi.presentation.contract.AppDbContract
 import me.newbly.camyomi.presentation.contract.JMdictContract
 import javax.inject.Inject
 
-class FetchDefinitionsUseCase @Inject constructor(
+class FetchBookmarksUseCase @Inject constructor(
     private val appRepository: AppDbContract.Repository,
     private val jmdictRepository: JMdictContract.Repository,
 ) {
-    suspend operator fun invoke(text: String): Result<List<DictionaryEntry>> {
+    suspend operator fun invoke(): Result<List<DictionaryEntry>> {
         return try {
-            val entries = jmdictRepository.getDictionaryEntries("$text%").getOrThrow().toMutableList()
-            entries.forEach {
-                it.isBookmarked = appRepository.isBookmarked(it.id).getOrThrow()
-            }
-            
-            Result.success(entries)
+            val bookmarkIds = appRepository.getBookmarks().getOrThrow().map { it.entryId }
+            Result.success(
+                jmdictRepository.getDictionaryEntries(bookmarkIds).getOrThrow()
+            )
         } catch (e: Exception) {
             Result.failure(e)
         }

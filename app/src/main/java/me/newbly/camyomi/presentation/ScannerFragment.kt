@@ -31,23 +31,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import me.newbly.camyomi.databinding.FragmentOcrScannerBinding
+import kotlinx.coroutines.launch
+import me.newbly.camyomi.databinding.FragmentScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
-import me.newbly.camyomi.presentation.contract.OCRScannerContract
+import me.newbly.camyomi.presentation.contract.ScannerContract
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OCRScannerFragment : Fragment(), OCRScannerContract.View {
+class ScannerFragment : Fragment(), ScannerContract.View {
 
     @Inject
-    lateinit var presenterFactory: OCRScannerPresenter.Factory
-    private lateinit var presenter: OCRScannerContract.Presenter
+    lateinit var presenterFactory: ScannerPresenter.Factory
+    private lateinit var presenter: ScannerContract.Presenter
 
-    private var _binding: FragmentOcrScannerBinding? = null
+    private var _binding: FragmentScannerBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var cameraLauncher: ActivityResultLauncher<Void?>
@@ -106,8 +109,17 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOcrScannerBinding.inflate(layoutInflater)
+        _binding = FragmentScannerBinding.inflate(inflater, container, false)
         binding.bindView()
+
+        findNavController().currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String>("recentText")
+            ?.observe(viewLifecycleOwner) {
+                if (it.isNotEmpty()) {
+                    presenter.loadPassedArgs(it)
+                }
+            }
 
         return binding.root
     }
@@ -177,12 +189,12 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
     override fun showError(errorMessage: String) {
         Toast.makeText(
             context,
-            "Error in processing image!\n$errorMessage",
+            "Error! $errorMessage",
             Toast.LENGTH_SHORT
         ).show()
     }
 
-    private fun FragmentOcrScannerBinding.bindView() {
+    private fun FragmentScannerBinding.bindView() {
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -190,6 +202,12 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
             }
         }
 
+        definitionAdapter.setBookmarkButtonOnClickListener {
+            lifecycleScope.launch {
+                it.isBookmarked = presenter.onBookmarkButtonClicked(it.id)
+                definitionAdapter.notifyItemChanged(definitionAdapter.currentList.indexOf(it))
+            }
+        }
         definitionList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = definitionAdapter
@@ -203,7 +221,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         launchPickerButton.setOnClickListener { presenter.onImagePickerButtonClicked() }
     }
 
-    private fun FragmentOcrScannerBinding.hideFabMenu() {
+    private fun FragmentScannerBinding.hideFabMenu() {
         launchCameraButton.hide()
         launchPickerButton.hide()
         cameraText.visibility = View.GONE
@@ -211,7 +229,7 @@ class OCRScannerFragment : Fragment(), OCRScannerContract.View {
         scanFab.shrink()
     }
 
-    private fun FragmentOcrScannerBinding.showFabMenu() {
+    private fun FragmentScannerBinding.showFabMenu() {
         launchCameraButton.show()
         launchPickerButton.show()
         cameraText.visibility = View.VISIBLE

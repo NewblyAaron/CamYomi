@@ -3,7 +3,7 @@ package me.newbly.camyomi.presentation.contract
 import android.graphics.Bitmap
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 
-interface OCRScannerContract {
+interface ScannerContract {
     interface View {
         fun launchImagePicker()
         fun launchCamera()
@@ -19,7 +19,9 @@ interface OCRScannerContract {
         fun onScanFabClicked()
         fun onCameraButtonClicked()
         fun onImagePickerButtonClicked()
+        suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean
         fun onImageCaptured(image: Bitmap)
-        fun onTextClicked(text: String)
+        fun onTextClicked(selectedText: String)
+        fun loadPassedArgs(passedText: String)
     }
 }

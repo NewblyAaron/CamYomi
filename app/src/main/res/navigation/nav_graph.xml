@@ -3,11 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/OCRScannerFragment">
+    app:startDestination="@id/navigation_scanner">
 
     <fragment
-        android:id="@+id/OCRScannerFragment"
-        android:name="me.newbly.camyomi.presentation.OCRScannerFragment"
-        android:label="fragment_ocr_scanner"
-        tools:layout="@layout/fragment_ocr_scanner" />
+        android:id="@+id/navigation_scanner"
+        android:name="me.newbly.camyomi.presentation.ScannerFragment"
+        android:label="fragment_scanner"
+        tools:layout="@layout/fragment_scanner" />
+    <fragment
+        android:id="@+id/navigation_recent"
+        android:name="me.newbly.camyomi.presentation.RecentlyScannedFragment"
+        android:label="fragment_recently_scanned"
+        tools:layout="@layout/fragment_recently_scanned" />
+    <fragment
+        android:id="@+id/navigation_bookmarks"
+        android:name="me.newbly.camyomi.presentation.BookmarksFragment"
+        android:label="fragment_bookmarks"
+        tools:layout="@layout/fragment_bookmarks" />
+    <action
+        android:id="@+id/action_global_navigation_scanner"
+        app:popUpTo="@id/navigation_scanner"
+        app:restoreState="true" />
 </navigation>

@@ -4,17 +4,16 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
-import me.newbly.camyomi.data.local.jmdictdb.dao.EntryDao
+import me.newbly.camyomi.data.local.jmdictdb.dao.DictionaryEntryDao
 import me.newbly.camyomi.data.local.mlkit.MLKitService
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 import javax.inject.Inject
 
 class TextRecognitionRepository @Inject constructor(
-    database: JMdictDatabase,
     private val mlKitService: MLKitService
 ): TextRecognitionContract.Repository {
-    private val entryDao: EntryDao = database.entryDao()
+    private class NoJapaneseTextExtractedException(message: String): Exception(message)
 
     private fun extractJapaneseText(text: String): String {
         // Regular expression to match Japanese characters (Hiragana, Katakana, and Kanji)
@@ -32,28 +31,17 @@ class TextRecognitionRepository @Inject constructor(
         return try {
             val recognizedText = mlKitService.recognizeTextFromImage(inputImage).getOrThrow()
             val formattedText = extractJapaneseText(recognizedText)
+            if (formattedText.isEmpty()) {
+                throw NoJapaneseTextExtractedException("No japanese text was found.")
+            }
             Result.success(formattedText)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.localizedMessage, e)
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getDictionaryEntries(queryText: String): Result<List<DictionaryEntry>> {
-        return try {
-            val entries = entryDao.findByText(queryText)
-            if (entries.isEmpty()) {
-                throw NoSuchElementException()
-            }
-
-            Result.success(entries)
-        } catch (e: Exception) {
-            Log.e(TAG_NAME, e.localizedMessage, e)
+            Log.e(TAG_NAME, e.message, e)
             Result.failure(e)
         }
     }
 
     companion object {
-        private val TAG_NAME = this::class.simpleName
+        private val TAG_NAME = TextRecognitionRepository::class.simpleName
     }
 }

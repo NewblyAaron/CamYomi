@@ -10,6 +10,8 @@ import javax.inject.Inject
 class MLKitService @Inject constructor(
     private val textRecognizer: TextRecognizer
 ): TextRecognitionContract.DataSource {
+    private class NoTextRecognizedException(message: String): Exception(message)
+
     override suspend fun recognizeTextFromImage(inputImage: InputImage): Result<String> {
         return try {
             val recognizedText = textRecognizer.process(inputImage).await()
@@ -19,6 +21,11 @@ class MLKitService @Inject constructor(
                     it.text
                 }
             )
+
+            if (recognizedText.text.isEmpty()) {
+                throw NoTextRecognizedException("No text was recognized from the image.")
+            }
+
             Result.success(recognizedText.text)
         } catch (e: Exception) {
             Result.failure(e)
