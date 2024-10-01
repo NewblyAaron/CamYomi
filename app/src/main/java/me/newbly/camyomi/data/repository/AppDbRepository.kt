@@ -1,18 +1,17 @@
 package me.newbly.camyomi.data.repository
 
 import android.util.Log
-import me.newbly.camyomi.data.local.app.AppDatabase
+import me.newbly.camyomi.data.local.app.dao.BookmarkDao
+import me.newbly.camyomi.data.local.app.dao.RecentScanDao
 import me.newbly.camyomi.domain.entity.Bookmark
 import me.newbly.camyomi.domain.entity.RecentScan
 import me.newbly.camyomi.presentation.contract.AppDbContract
 import javax.inject.Inject
 
 class AppDbRepository @Inject constructor(
-    database: AppDatabase
+    private val recentScanDao: RecentScanDao,
+    private val bookmarkDao: BookmarkDao
 ): AppDbContract.Repository {
-    private val recentScanDao = database.recentScanDao()
-    private val bookmarkDao = database.bookmarkDao()
-
     override suspend fun getRecentlyScanned(): Result<List<RecentScan>> {
         return try {
             val list = recentScanDao.getRecentlyScanned()
