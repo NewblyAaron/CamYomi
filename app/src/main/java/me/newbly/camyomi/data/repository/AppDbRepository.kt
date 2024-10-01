@@ -59,7 +59,24 @@ class AppDbRepository @Inject constructor(
     }
 
     override suspend fun removeBookmark(bookmarkId: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+        return try {
+            bookmarkDao.delete(bookmarkId)
+            Result.success(true)
+        } catch (e: Exception) {
+            Log.e(TAG_NAME, e.message, e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun isBookmarked(dictionaryEntryId: Int): Result<Boolean> {
+        return try {
+            Result.success(
+                bookmarkDao.isBookmarked(dictionaryEntryId) == 1
+            )
+        } catch (e: Exception) {
+            Log.e(TAG_NAME, e.message, e)
+            Result.failure(e)
+        }
     }
 
     companion object {
