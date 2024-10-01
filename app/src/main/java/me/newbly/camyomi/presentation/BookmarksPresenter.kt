@@ -9,12 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import me.newbly.camyomi.domain.usecase.RemoveBookmarkUseCase
-import me.newbly.camyomi.domain.usecase.GetBookmarksUseCase
+import me.newbly.camyomi.domain.usecase.FetchBookmarksUseCase
 import me.newbly.camyomi.presentation.contract.BookmarksContract
 
 class BookmarksPresenter @AssistedInject constructor(
     @Assisted private val view: BookmarksContract.View,
-    private val getBookmarksUseCase: GetBookmarksUseCase,
+    private val fetchBookmarksUseCase: FetchBookmarksUseCase,
     private val removeBookmarkUseCase: RemoveBookmarkUseCase
 ): BookmarksContract.Presenter {
     private val presenterScope = CoroutineScope(Dispatchers.Main)
@@ -27,7 +27,7 @@ class BookmarksPresenter @AssistedInject constructor(
     override fun getBookmarks() {
         presenterScope.launch {
             try {
-                view.showBookmarkedDefinitions(getBookmarksUseCase.invoke().getOrThrow())
+                view.showBookmarkedDefinitions(fetchBookmarksUseCase.invoke().getOrThrow())
             } catch (e: Exception) {
                 e.message?.let { view.showError(it) }
             }

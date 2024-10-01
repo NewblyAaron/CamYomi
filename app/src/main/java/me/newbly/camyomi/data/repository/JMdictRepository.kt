@@ -26,6 +26,20 @@ class JMdictRepository @Inject constructor(
         }
     }
 
+    override suspend fun getDictionaryEntries(ids: List<Int>): Result<List<DictionaryEntry>> {
+        return try {
+            val entries = dictionaryEntryDao.findByIds(ids)
+            if (entries.isEmpty()) {
+                throw NoSuchElementException("No entries found.")
+            }
+
+            Result.success(entries)
+        } catch (e: Exception) {
+            Log.e(TAG_NAME, e.message, e)
+            Result.failure(e)
+        }
+    }
+
     companion object {
         private val TAG_NAME = JMdictRepository::class.simpleName
     }

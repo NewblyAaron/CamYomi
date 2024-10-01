@@ -24,7 +24,14 @@ class AppDbRepository @Inject constructor(
     }
 
     override suspend fun getBookmarks(): Result<List<Bookmark>> {
-        TODO("Not yet implemented")
+        return try {
+            Result.success(
+                bookmarkDao.getBookmarks()
+            )
+        } catch (e: Exception) {
+            Log.e(TAG_NAME, e.message, e)
+            Result.failure(e)
+        }
     }
 
     override suspend fun saveToRecentlyScanned(scannedText: String): Result<Boolean> {

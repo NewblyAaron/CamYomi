@@ -11,4 +11,7 @@ interface DictionaryEntryDao {
 
     @Query("SELECT * FROM entry WHERE id = :id")
     suspend fun findById(id: Int): DictionaryEntry
+
+    @Query("SELECT * FROM entry WHERE id IN (:ids)")
+    suspend fun findByIds(ids: List<Int>): List<DictionaryEntry>
 }
