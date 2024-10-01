@@ -2,6 +2,7 @@ package me.newbly.camyomi.domain.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "entry")
@@ -23,6 +24,8 @@ data class DictionaryEntry(
     @ColumnInfo(name = "ex_text") val exText: String?,
     @ColumnInfo(name = "ex_sent") val exSent: String?,
 ) {
+    @Ignore var isBookmarked: Boolean = false
+
     fun getMainKanjiReading(): String {
         if (keb.isNullOrBlank()) return ""
 
@@ -39,7 +42,7 @@ data class DictionaryEntry(
         val kanjiReadings = keb?.split(";") ?: listOf()
         val kanaReadings = re?.split(";") ?: listOf()
 
-        var formattedString: String = ""
+        var formattedString = ""
 
         formattedString += "Other kanji readings: "
         if (kanjiReadings.isEmpty()) {
@@ -73,7 +76,7 @@ data class DictionaryEntry(
         if (gloss.isNullOrBlank()) return ""
 
         val glossary = gloss.replace("-None", "").split("|")
-        var formattedString: String = ""
+        var formattedString = ""
 
         for (def in glossary) {
             formattedString += "• $def\n"

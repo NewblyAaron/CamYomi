@@ -11,6 +11,5 @@ interface TextRecognitionContract {
 
     interface Repository {
         suspend fun processImageForOCR(bitmapImage: Bitmap): Result<String>
-        suspend fun getDictionaryEntries(queryText: String): Result<List<DictionaryEntry>>
     }
 }
