@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/navigation_scanner"
-        android:name="me.newbly.camyomi.presentation.ScannerFragment"
+        android:name="me.newbly.camyomi.presentation.ui.ScannerFragment"
         android:label="fragment_scanner"
         tools:layout="@layout/fragment_scanner" />
     <fragment
         android:id="@+id/navigation_recent"
-        android:name="me.newbly.camyomi.presentation.RecentlyScannedFragment"
+        android:name="me.newbly.camyomi.presentation.ui.RecentlyScannedFragment"
         android:label="fragment_recently_scanned"
         tools:layout="@layout/fragment_recently_scanned" />
     <fragment
         android:id="@+id/navigation_bookmarks"
-        android:name="me.newbly.camyomi.presentation.BookmarksFragment"
+        android:name="me.newbly.camyomi.presentation.ui.BookmarksFragment"
         android:label="fragment_bookmarks"
         tools:layout="@layout/fragment_bookmarks" />
     <action

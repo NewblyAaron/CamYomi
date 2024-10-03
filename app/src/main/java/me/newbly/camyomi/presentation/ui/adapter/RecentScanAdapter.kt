@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation
+package me.newbly.camyomi.presentation.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

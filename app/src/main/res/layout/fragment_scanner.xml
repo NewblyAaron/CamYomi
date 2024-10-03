@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".presentation.ScannerFragment">
+    tools:context=".presentation.ui.ScannerFragment">
 
     <ScrollView
         android:id="@+id/compose_frame"
@@ -20,7 +20,7 @@
             android:id="@+id/compose_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:composableName="me.newbly.camyomi.presentation.ScannerFragment.RecognizedJapaneseText" />
+            tools:composableName="me.newbly.camyomi.presentation.ui.ScannerFragment.RecognizedJapaneseText" />
     </ScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -98,5 +98,25 @@
             android:src="@drawable/baseline_insert_photo_24"
             app:fabSize="normal" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/definitions_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/definition_list"
+        app:layout_constraintEnd_toEndOf="@+id/definition_list"
+        app:layout_constraintStart_toStartOf="@+id/definition_list"
+        app:layout_constraintTop_toTopOf="@+id/definition_list" />
+
+    <ProgressBar
+        android:id="@+id/recognize_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/compose_frame"
+        app:layout_constraintEnd_toEndOf="@+id/compose_frame"
+        app:layout_constraintStart_toStartOf="@+id/compose_frame"
+        app:layout_constraintTop_toTopOf="@+id/compose_frame" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

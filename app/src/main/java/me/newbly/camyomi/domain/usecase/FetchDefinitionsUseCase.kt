@@ -9,9 +9,9 @@ class FetchDefinitionsUseCase @Inject constructor(
     private val appRepository: AppDbContract.Repository,
     private val jmdictRepository: JMdictContract.Repository,
 ) {
-    suspend operator fun invoke(text: String): Result<List<DictionaryEntry>> {
+    suspend operator fun invoke(word: String): Result<List<DictionaryEntry>> {
         return try {
-            val entries = jmdictRepository.getDictionaryEntries("$text%").getOrThrow().toMutableList()
+            val entries = jmdictRepository.getDictionaryEntries("$word%").getOrThrow().toMutableList()
             entries.forEach {
                 it.isBookmarked = appRepository.isBookmarked(it.id).getOrThrow()
             }
