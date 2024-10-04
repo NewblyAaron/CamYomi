@@ -11,10 +11,15 @@ class JMdictRepository @Inject constructor(
 ): JMdictContract.Repository {
     override suspend fun getDictionaryEntries(word: String): Result<List<DictionaryEntry>> {
         return try {
-            val entries = dictionaryEntryDao.findByText(word)
+            val queryText = "$word%"
+            val entries = dictionaryEntryDao.findByText(queryText)
             if (entries.isEmpty()) {
                 throw NoSuchElementException("No entries found.")
             }
+
+            Log.d(TAG_NAME, entries.joinToString(separator = "\n") {
+                it.toString()
+            })
 
             Result.success(entries)
         } catch (e: Exception) {
