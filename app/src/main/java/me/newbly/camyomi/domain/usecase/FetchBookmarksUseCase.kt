@@ -8,8 +8,8 @@ import javax.inject.Inject
 class FetchBookmarksUseCase @Inject constructor(
     private val appRepository: AppDbContract.Repository,
     private val jmdictRepository: JMdictContract.Repository,
-) {
-    suspend operator fun invoke(): Result<List<DictionaryEntry>> {
+) : BaseUseCase<Unit, Result<List<DictionaryEntry>>>() {
+    override suspend fun execute(params: Unit): Result<List<DictionaryEntry>> {
         return try {
             val bookmarkIds = appRepository.getBookmarks().getOrThrow().map { it.entryId }
             Result.success(

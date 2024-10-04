@@ -5,7 +5,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import me.newbly.camyomi.domain.usecase.FetchBookmarksUseCase
 import me.newbly.camyomi.domain.usecase.RemoveBookmarkUseCase
 import me.newbly.camyomi.presentation.contract.BookmarksContract
@@ -24,7 +23,7 @@ class BookmarksPresenter @AssistedInject constructor(
 
     override suspend fun getBookmarks() {
         try {
-            val bookmarks = fetchBookmarks().await().getOrThrow()
+            val bookmarks = fetchBookmarksUseCase.invoke().getOrThrow()
 
             view.hideProgress()
             view.showBookmarkedDefinitions(bookmarks)
@@ -35,22 +34,12 @@ class BookmarksPresenter @AssistedInject constructor(
 
     override suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean {
         try {
-            return removeBookmark(dictionaryEntryId).await().getOrThrow()
+            return removeBookmarkUseCase.invoke(dictionaryEntryId).getOrThrow()
         } catch (e: Exception) {
             handleException(e)
             return false
         }
     }
-
-    private suspend fun fetchBookmarks() =
-        presenterScope.async(Dispatchers.IO) {
-            return@async fetchBookmarksUseCase.invoke()
-        }
-
-    private suspend fun removeBookmark(dictionaryEntryId: Int) =
-        presenterScope.async(Dispatchers.IO) {
-            return@async removeBookmarkUseCase.invoke(dictionaryEntryId)
-        }
 
     private fun handleException(e: Exception) {
         view.hideProgress()

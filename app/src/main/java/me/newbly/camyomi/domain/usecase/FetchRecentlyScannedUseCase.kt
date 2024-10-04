@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class FetchRecentlyScannedUseCase @Inject constructor(
     private val repository: AppDbContract.Repository
-) {
-    suspend operator fun invoke(): Result<List<RecentScan>> =
+) : BaseUseCase<Unit, Result<List<RecentScan>>>() {
+    override suspend fun execute(params: Unit): Result<List<RecentScan>> =
         repository.getRecentlyScanned()
 }

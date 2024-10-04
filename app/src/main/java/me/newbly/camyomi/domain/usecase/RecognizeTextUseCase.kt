@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class RecognizeTextUseCase @Inject constructor(
     private val repository: TextRecognitionContract.Repository
-) {
-    suspend operator fun invoke(bitmapImage: Bitmap): Result<String> =
+) : BaseUseCase<Bitmap, Result<String>>() {
+    override suspend fun execute(bitmapImage: Bitmap): Result<String> =
         repository.processImageForOCR(bitmapImage)
 }

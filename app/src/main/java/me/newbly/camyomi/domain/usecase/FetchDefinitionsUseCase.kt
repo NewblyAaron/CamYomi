@@ -8,14 +8,15 @@ import javax.inject.Inject
 class FetchDefinitionsUseCase @Inject constructor(
     private val appRepository: AppDbContract.Repository,
     private val jmdictRepository: JMdictContract.Repository,
-) {
-    suspend operator fun invoke(word: String): Result<List<DictionaryEntry>> {
+) : BaseUseCase<String, Result<List<DictionaryEntry>>>() {
+    override suspend fun execute(word: String): Result<List<DictionaryEntry>> {
         return try {
-            val entries = jmdictRepository.getDictionaryEntries("$word%").getOrThrow().toMutableList()
+            val entries =
+                jmdictRepository.getDictionaryEntries("$word%").getOrThrow().toMutableList()
             entries.forEach {
                 it.isBookmarked = appRepository.isBookmarked(it.id).getOrThrow()
             }
-            
+
             Result.success(entries)
         } catch (e: Exception) {
             Result.failure(e)

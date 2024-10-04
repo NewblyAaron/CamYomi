@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class RemoveBookmarkUseCase @Inject constructor(
     private val repository: AppDbContract.Repository
-) {
-    suspend operator fun invoke(bookmarkId: Int): Result<Boolean> =
+) : BaseUseCase<Int, Result<Boolean>>() {
+    override suspend fun execute(bookmarkId: Int): Result<Boolean> =
         repository.removeBookmark(bookmarkId)
 }

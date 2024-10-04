@@ -5,7 +5,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import me.newbly.camyomi.domain.entity.RecentScan
 import me.newbly.camyomi.domain.usecase.FetchRecentlyScannedUseCase
 import me.newbly.camyomi.presentation.contract.RecentlyScannedContract
@@ -25,7 +24,7 @@ class RecentlyScannedPresenter @AssistedInject constructor(
         try {
             view.displayProgress()
 
-            val list = fetchRecentScans().await().getOrThrow()
+            val list = fetchRecentlyScannedUseCase.invoke().getOrThrow()
 
             view.hideProgress()
             view.showRecentScans(list)
@@ -35,11 +34,6 @@ class RecentlyScannedPresenter @AssistedInject constructor(
     }
 
     override fun onRecentScanClicked(recentScan: RecentScan) = view.navigateToScanner(recentScan.text)
-
-    private suspend fun fetchRecentScans() =
-        presenterScope.async(Dispatchers.IO) {
-            return@async fetchRecentlyScannedUseCase.invoke()
-        }
 
     private fun handleException(e: Exception) {
         view.hideProgress()
