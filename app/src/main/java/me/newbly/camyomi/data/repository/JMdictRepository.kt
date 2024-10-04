@@ -9,9 +9,9 @@ import javax.inject.Inject
 class JMdictRepository @Inject constructor(
     private val dictionaryEntryDao: DictionaryEntryDao
 ): JMdictContract.Repository {
-    override suspend fun getDictionaryEntries(queryText: String): Result<List<DictionaryEntry>> {
+    override suspend fun getDictionaryEntries(word: String): Result<List<DictionaryEntry>> {
         return try {
-            val entries = dictionaryEntryDao.findByText(queryText)
+            val entries = dictionaryEntryDao.findByText(word)
             if (entries.isEmpty()) {
                 throw NoSuchElementException("No entries found.")
             }

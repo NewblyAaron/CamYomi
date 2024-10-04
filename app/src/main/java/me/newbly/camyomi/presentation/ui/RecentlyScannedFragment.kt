@@ -1,20 +1,23 @@
-package me.newbly.camyomi.presentation
+package me.newbly.camyomi.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import me.newbly.camyomi.databinding.FragmentRecentlyScannedBinding
 import me.newbly.camyomi.domain.entity.RecentScan
 import me.newbly.camyomi.presentation.contract.RecentlyScannedContract
+import me.newbly.camyomi.presentation.ui.adapter.RecentScanAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,7 +36,6 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
         super.onAttach(context)
 
         presenter = presenterFactory.create(this)
-        presenter.getRecentScans()
     }
 
     override fun onCreateView(
@@ -41,9 +43,14 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecentlyScannedBinding.inflate(inflater, container, false)
-        binding.bindView()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.bindView()
     }
 
     override fun onDestroyView() {
@@ -69,12 +76,31 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
         ).show()
     }
 
+    override fun displayProgress() {
+        binding.recentScanProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        binding.recentScanProgressBar.visibility = View.GONE
+    }
+
     private fun FragmentRecentlyScannedBinding.bindView() {
         recentScanAdapter.setOnListItemClickListener { presenter.onRecentScanClicked(it) }
         recentScanList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recentScanAdapter
         }
-        recentScanList.addItemDecoration(DividerItemDecoration(recentScanList.context, RecyclerView.VERTICAL))
+        recentScanList.addItemDecoration(
+            DividerItemDecoration(
+                recentScanList.context,
+                RecyclerView.VERTICAL
+            )
+        )
+
+        hideProgress()
+
+        lifecycleScope.launch {
+            presenter.getRecentScans()
+        }
     }
 }

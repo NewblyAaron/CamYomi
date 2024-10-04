@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation
+package me.newbly.camyomi.presentation.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import me.newbly.camyomi.R
-import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.databinding.DefinitionItemBinding
+import me.newbly.camyomi.domain.entity.DictionaryEntry
 
 class DefinitionAdapter(
     private val areBookmarks: Boolean = false
@@ -23,7 +23,11 @@ class DefinitionAdapter(
             binding.otherReadingsText.text = dictionaryEntry.getOtherReadings()
             binding.glossaryText.text = dictionaryEntry.getGlossary()
 
-            binding.bookmarkButton.setOnClickListener { onBookmarkButtonClick?.invoke(dictionaryEntry) }
+            binding.bookmarkButton.setOnClickListener {
+                onBookmarkButtonClick?.invoke(
+                    dictionaryEntry
+                )
+            }
             updateBookmarkIcon(dictionaryEntry.isBookmarked)
         }
 
@@ -34,6 +38,7 @@ class DefinitionAdapter(
                         R.drawable.baseline_bookmark_remove_24
                     )
                 }
+
                 else -> {
                     when (isBookmarked) {
                         true -> {
@@ -42,6 +47,7 @@ class DefinitionAdapter(
                                 R.drawable.baseline_bookmark_added_24
                             )
                         }
+
                         false -> {
                             binding.bookmarkButton.isEnabled = true
                             binding.bookmarkButton.setImageResource(R.drawable.baseline_bookmark_add_24)
@@ -72,14 +78,21 @@ class DefinitionAdapter(
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<DictionaryEntry> = object: DiffUtil.ItemCallback<DictionaryEntry>() {
-            override fun areItemsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-                return oldItem.id == newItem.id
-            }
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<DictionaryEntry> =
+            object : DiffUtil.ItemCallback<DictionaryEntry>() {
+                override fun areItemsTheSame(
+                    oldItem: DictionaryEntry,
+                    newItem: DictionaryEntry
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
 
-            override fun areContentsTheSame(oldItem: DictionaryEntry, newItem: DictionaryEntry): Boolean {
-                return oldItem == newItem
+                override fun areContentsTheSame(
+                    oldItem: DictionaryEntry,
+                    newItem: DictionaryEntry
+                ): Boolean {
+                    return oldItem == newItem
+                }
             }
-        }
     }
 }

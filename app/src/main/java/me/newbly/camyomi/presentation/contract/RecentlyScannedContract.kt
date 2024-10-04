@@ -7,10 +7,12 @@ interface RecentlyScannedContract {
         fun navigateToScanner(queryText: String)
         fun showRecentScans(recentScans: List<RecentScan>)
         fun showError(errorMessage: String)
+        fun displayProgress()
+        fun hideProgress()
     }
 
     interface Presenter {
-        fun getRecentScans()
+        suspend fun getRecentScans()
         fun onRecentScanClicked(recentScan: RecentScan)
     }
 }

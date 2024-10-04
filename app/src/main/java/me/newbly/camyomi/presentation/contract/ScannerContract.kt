@@ -7,8 +7,10 @@ interface ScannerContract {
     interface View {
         fun launchImagePicker()
         fun launchCamera()
-        fun displayProgress()
-        fun hideProgress()
+        fun displayRecognizeProgress()
+        fun displayDefinitionsProgress()
+        fun hideRecognizeProgress()
+        fun hideDefinitionsProgress()
         fun toggleFabMenu()
         fun showRecognizedText(wordMap: Map<String, String>)
         fun showDefinitions(entries: List<DictionaryEntry>)
@@ -20,8 +22,8 @@ interface ScannerContract {
         fun onCameraButtonClicked()
         fun onImagePickerButtonClicked()
         suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean
-        fun onImageCaptured(image: Bitmap)
-        fun onTextClicked(selectedText: String)
-        fun loadPassedArgs(passedText: String)
+        suspend fun onImageCaptured(image: Bitmap)
+        suspend fun onTextClicked(selectedText: String)
+        suspend fun loadPassedArgs(passedText: String)
     }
 }

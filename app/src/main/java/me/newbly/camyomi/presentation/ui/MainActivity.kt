@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation
+package me.newbly.camyomi.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

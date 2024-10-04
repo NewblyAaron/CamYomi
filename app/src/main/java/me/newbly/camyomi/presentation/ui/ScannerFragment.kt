@@ -1,4 +1,4 @@
-package me.newbly.camyomi.presentation
+package me.newbly.camyomi.presentation.ui
 
 import android.Manifest
 import android.content.Context
@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import me.newbly.camyomi.databinding.FragmentScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.ScannerContract
+import me.newbly.camyomi.presentation.ui.adapter.DefinitionAdapter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -71,7 +72,9 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             ActivityResultContracts.TakePicturePreview()
         ) { bitmap ->
             if (bitmap != null) {
-                presenter.onImageCaptured(bitmap)
+                lifecycleScope.launch {
+                    presenter.onImageCaptured(bitmap)
+                }
             }
         }
         pickerLauncher = registerForActivityResult(
@@ -81,7 +84,9 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                 val source = ImageDecoder.createSource(requireActivity().contentResolver, uri)
                 val bitmap = ImageDecoder.decodeBitmap(source)
 
-                presenter.onImageCaptured(bitmap)
+                lifecycleScope.launch {
+                    presenter.onImageCaptured(bitmap)
+                }
             } else {
                 Toast.makeText(
                     context,
@@ -117,7 +122,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             ?.getLiveData<String>("recentText")
             ?.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty()) {
-                    presenter.loadPassedArgs(it)
+                    lifecycleScope.launch { presenter.loadPassedArgs(it) }
                 }
             }
 
@@ -149,12 +154,20 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         }
     }
 
-    override fun displayProgress() {
-        TODO("Not yet implemented")
+    override fun displayRecognizeProgress() {
+        binding.recognizeProgressBar.visibility = View.VISIBLE
     }
 
-    override fun hideProgress() {
-        TODO("Not yet implemented")
+    override fun displayDefinitionsProgress() {
+        binding.definitionsProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideRecognizeProgress() {
+        binding.recognizeProgressBar.visibility = View.GONE
+    }
+
+    override fun hideDefinitionsProgress() {
+        binding.definitionsProgressBar.visibility = View.GONE
     }
 
     override fun toggleFabMenu() {
@@ -175,15 +188,15 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         }
     }
 
-    override fun showDefinitions(entries: List<DictionaryEntry>) {
-        definitionAdapter.submitList(entries)
-    }
-
     override fun showRecognizedText(wordMap: Map<String, String>) {
         recognizedTextMap = wordMap
         binding.composeView.setContent {
             RecognizedJapaneseText(recognizedTextMap)
         }
+    }
+
+    override fun showDefinitions(entries: List<DictionaryEntry>) {
+        definitionAdapter.submitList(entries)
     }
 
     override fun showError(errorMessage: String) {
@@ -212,8 +225,15 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = definitionAdapter
         }
-        definitionList.addItemDecoration(DividerItemDecoration(definitionList.context, RecyclerView.VERTICAL))
+        definitionList.addItemDecoration(
+            DividerItemDecoration(
+                definitionList.context,
+                RecyclerView.VERTICAL
+            )
+        )
 
+        hideRecognizeProgress()
+        hideDefinitionsProgress()
         hideFabMenu()
 
         scanFab.setOnClickListener { presenter.onScanFabClicked() }
@@ -279,7 +299,10 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                             modifier = Modifier
                                 .clickable {
                                     selectedText.value = word.key
-                                    presenter.onTextClicked(word.value)
+
+                                    lifecycleScope.launch {
+                                        presenter.onTextClicked(word.value)
+                                    }
                                 }
                         )
                     }
