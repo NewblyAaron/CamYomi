@@ -35,7 +35,7 @@ class AppDbRepository @Inject constructor(
 
     override suspend fun saveToRecentlyScanned(scannedText: String): Result<Boolean> {
         return try {
-            val newRecentScan = RecentScan(text = scannedText, scannedAt = System.currentTimeMillis())
+            val newRecentScan = RecentScan(text = scannedText)
             recentScanDao.insert(newRecentScan)
             Result.success(true)
         } catch (e: Exception) {
