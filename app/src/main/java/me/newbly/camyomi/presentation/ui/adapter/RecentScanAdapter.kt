@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import me.newbly.camyomi.databinding.ScannedItemBinding
 import me.newbly.camyomi.domain.entity.RecentScan
 
-class RecentScanAdapter: ListAdapter<RecentScan, RecentScanAdapter.ViewHolder>(DIFF_CALLBACK) {
+class RecentScanAdapter : ListAdapter<RecentScan, RecentScanAdapter.ViewHolder>(DIFF_CALLBACK) {
     private var onListItemClick: ((RecentScan) -> Unit)? = null
 
     class ViewHolder(
         private val binding: ScannedItemBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(recentScan: RecentScan) {
             binding.scannedText.text = recentScan.text
         }
@@ -41,12 +41,13 @@ class RecentScanAdapter: ListAdapter<RecentScan, RecentScanAdapter.ViewHolder>(D
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<RecentScan> = object: DiffUtil.ItemCallback<RecentScan>() {
-            override fun areItemsTheSame(oldItem: RecentScan, newItem: RecentScan): Boolean =
-                oldItem.id == newItem.id
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<RecentScan> =
+            object : DiffUtil.ItemCallback<RecentScan>() {
+                override fun areItemsTheSame(oldItem: RecentScan, newItem: RecentScan): Boolean =
+                    oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: RecentScan, newItem: RecentScan): Boolean =
-                oldItem == newItem
-        }
+                override fun areContentsTheSame(oldItem: RecentScan, newItem: RecentScan): Boolean =
+                    oldItem == newItem
+            }
     }
 }

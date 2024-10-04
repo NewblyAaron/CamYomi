@@ -3,8 +3,6 @@ package me.newbly.camyomi.presentation.ui
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import me.newbly.camyomi.domain.entity.RecentScan
 import me.newbly.camyomi.domain.usecase.FetchRecentlyScannedUseCase
 import me.newbly.camyomi.presentation.contract.RecentlyScannedContract
@@ -13,8 +11,6 @@ class RecentlyScannedPresenter @AssistedInject constructor(
     @Assisted private val view: RecentlyScannedContract.View,
     private val fetchRecentlyScannedUseCase: FetchRecentlyScannedUseCase
 ) : RecentlyScannedContract.Presenter {
-    private val presenterScope = CoroutineScope(Dispatchers.Main)
-
     @AssistedFactory
     interface Factory {
         fun create(view: RecentlyScannedContract.View): RecentlyScannedPresenter
@@ -24,7 +20,7 @@ class RecentlyScannedPresenter @AssistedInject constructor(
         try {
             view.displayProgress()
 
-            val list = fetchRecentlyScannedUseCase.invoke().getOrThrow()
+            val list = fetchRecentlyScannedUseCase(Unit).getOrThrow()
 
             view.hideProgress()
             view.showRecentScans(list)
@@ -33,7 +29,8 @@ class RecentlyScannedPresenter @AssistedInject constructor(
         }
     }
 
-    override fun onRecentScanClicked(recentScan: RecentScan) = view.navigateToScanner(recentScan.text)
+    override fun onRecentScanClicked(recentScan: RecentScan) =
+        view.navigateToScanner(recentScan.text)
 
     private fun handleException(e: Exception) {
         view.hideProgress()

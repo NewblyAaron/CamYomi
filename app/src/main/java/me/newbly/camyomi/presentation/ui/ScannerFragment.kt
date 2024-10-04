@@ -225,7 +225,12 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = definitionAdapter
         }
-        definitionList.addItemDecoration(DividerItemDecoration(definitionList.context, RecyclerView.VERTICAL))
+        definitionList.addItemDecoration(
+            DividerItemDecoration(
+                definitionList.context,
+                RecyclerView.VERTICAL
+            )
+        )
 
         hideRecognizeProgress()
         hideDefinitionsProgress()

@@ -7,9 +7,8 @@ import com.atilika.kuromoji.ipadic.Tokenizer
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import me.newbly.camyomi.domain.usecase.AddBookmarkUseCase
 import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
 import me.newbly.camyomi.domain.usecase.RecognizeTextUseCase
@@ -23,64 +22,30 @@ class ScannerPresenter @AssistedInject constructor(
     private val saveToRecentlyScannedUseCase: SaveToRecentlyScannedUseCase,
     private val addBookmarkUseCase: AddBookmarkUseCase
 ) : ScannerContract.Presenter {
-
-    private val presenterScope = CoroutineScope(Dispatchers.Main)
-    private val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
-
     @AssistedFactory
     interface Factory {
         fun create(view: ScannerContract.View): ScannerPresenter
     }
 
+    private val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
+
     override fun onScanFabClicked() = view.toggleFabMenu()
     override fun onCameraButtonClicked() = view.launchCamera()
     override fun onImagePickerButtonClicked() = view.launchImagePicker()
-    override suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean = saveNewBookmark(dictionaryEntryId)
+    override suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean =
+        saveNewBookmark(dictionaryEntryId)
+
     override suspend fun onImageCaptured(image: Bitmap) = processTextRecognition(image)
     override suspend fun onTextClicked(selectedText: String) = getDefinitionsFor(selectedText)
     override suspend fun loadPassedArgs(passedText: String) = processRecentScan(passedText)
-
-    private suspend fun getRecognizedText(image: Bitmap) =
-        presenterScope.async(Dispatchers.IO) {
-            return@async recognizeTextUseCase.invoke(image)
-        }
-
-    private suspend fun saveToRecentlyScanned(scannedText: String) =
-        presenterScope.async(Dispatchers.IO) {
-            return@async saveToRecentlyScannedUseCase.invoke(scannedText)
-        }
-
-    private suspend fun fetchDefinitions(word: String) =
-        presenterScope.async(Dispatchers.IO) {
-            return@async fetchDefinitionsUseCase.invoke(word)
-        }
-
-    private suspend fun addBookmark(dictionaryEntryId: Int) =
-        presenterScope.async(Dispatchers.IO) {
-            return@async addBookmarkUseCase.invoke(dictionaryEntryId)
-        }
-
-    private fun tokenizeText(text: String) =
-        presenterScope.async(Dispatchers.IO) {
-            val tokens = tokenizer.tokenize(text)
-            val wordMap = mutableMapOf<String, String>()
-            var log = ""
-            tokens.forEach {
-                log += "${it.surface}\t${it.allFeatures}\n"
-                wordMap[it.surface] = it.baseForm
-            }
-            Log.d("OCRScannerPresenter", log)
-
-            return@async wordMap
-        }
 
     private suspend fun processTextRecognition(image: Bitmap) {
         try {
             view.displayRecognizeProgress()
 
-            val recognizedText = getRecognizedText(image).await().getOrThrow()
-            saveToRecentlyScanned(recognizedText).await().getOrThrow()
-            val wordMap = tokenizeText(recognizedText).await()
+            val recognizedText = recognizeTextUseCase(image).getOrThrow()
+            saveToRecentlyScannedUseCase(recognizedText).getOrThrow()
+            val wordMap = tokenizeText(recognizedText)
 
             view.hideRecognizeProgress()
             view.toggleFabMenu()            // hide the fab menu
@@ -96,7 +61,7 @@ class ScannerPresenter @AssistedInject constructor(
         try {
             view.displayRecognizeProgress()
 
-            val wordMap = tokenizeText(recentScanText).await()
+            val wordMap = tokenizeText(recentScanText)
 
             view.hideRecognizeProgress()
             view.showDefinitions(listOf())  // clear definitions list
@@ -111,7 +76,7 @@ class ScannerPresenter @AssistedInject constructor(
         try {
             view.displayDefinitionsProgress()
 
-            val definitions = fetchDefinitions(word).await().getOrThrow()
+            val definitions = fetchDefinitionsUseCase(word).getOrThrow()
 
             view.hideDefinitionsProgress()
             view.showDefinitions(definitions)
@@ -123,12 +88,26 @@ class ScannerPresenter @AssistedInject constructor(
 
     private suspend fun saveNewBookmark(dictionaryEntryId: Int): Boolean {
         try {
-            return addBookmark(dictionaryEntryId).await().getOrThrow()
+            return addBookmarkUseCase(dictionaryEntryId).getOrThrow()
         } catch (e: Exception) {
             handleException(e)
             return false
         }
     }
+
+    private suspend fun tokenizeText(text: String): Map<String, String> =
+        withContext(Dispatchers.IO) {
+            val tokens = tokenizer.tokenize(text)
+            val wordMap = mutableMapOf<String, String>()
+            var log = ""
+            tokens.forEach {
+                log += "${it.surface}\t${it.allFeatures}\n"
+                wordMap[it.surface] = it.baseForm
+            }
+            Log.d("OCRScannerPresenter", log)
+
+            return@withContext wordMap
+        }
 
     private fun handleException(e: Exception) {
         e.message?.let { view.showError(it) }

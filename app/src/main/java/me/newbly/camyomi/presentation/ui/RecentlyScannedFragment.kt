@@ -2,11 +2,11 @@ package me.newbly.camyomi.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -90,7 +90,12 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recentScanAdapter
         }
-        recentScanList.addItemDecoration(DividerItemDecoration(recentScanList.context, RecyclerView.VERTICAL))
+        recentScanList.addItemDecoration(
+            DividerItemDecoration(
+                recentScanList.context,
+                RecyclerView.VERTICAL
+            )
+        )
 
         hideProgress()
 
