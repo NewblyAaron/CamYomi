@@ -1,5 +1,6 @@
 package me.newbly.camyomi.data.local.mlkit
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognizer
@@ -12,8 +13,9 @@ class MLKitService @Inject constructor(
 ): TextRecognitionContract.DataSource {
     private class NoTextRecognizedException(message: String): Exception(message)
 
-    override suspend fun recognizeTextFromImage(inputImage: InputImage): Result<String> {
+    override suspend fun recognizeTextFromImage(bitmapImage: Bitmap): Result<String> {
         return try {
+            val inputImage = InputImage.fromBitmap(bitmapImage, 0)
             val recognizedText = textRecognizer.process(inputImage).await()
             Log.d(
                 this::class.simpleName,

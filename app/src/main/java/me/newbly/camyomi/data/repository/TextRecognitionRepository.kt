@@ -2,11 +2,7 @@ package me.newbly.camyomi.data.repository
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.google.mlkit.vision.common.InputImage
-import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
-import me.newbly.camyomi.data.local.jmdictdb.dao.DictionaryEntryDao
 import me.newbly.camyomi.data.local.mlkit.MLKitService
-import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 import javax.inject.Inject
 
@@ -26,10 +22,8 @@ class TextRecognitionRepository @Inject constructor(
     }
 
     override suspend fun processImageForOCR(bitmapImage: Bitmap): Result<String> {
-        val inputImage = InputImage.fromBitmap(bitmapImage, 0)
-
         return try {
-            val recognizedText = mlKitService.recognizeTextFromImage(inputImage).getOrThrow()
+            val recognizedText = mlKitService.recognizeTextFromImage(bitmapImage).getOrThrow()
             val formattedText = extractJapaneseText(recognizedText)
             if (formattedText.isEmpty()) {
                 throw NoJapaneseTextExtractedException("No japanese text was found.")
