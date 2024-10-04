@@ -1,37 +1,45 @@
 package me.newbly.camyomi
 
 import android.graphics.Bitmap
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import me.newbly.camyomi.domain.usecase.RecognizeTextUseCase
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.withSettings
 
-
+@RunWith(MockitoJUnitRunner::class)
 class RecognizeTextUseCaseTest {
 
-    @MockK
+    @Mock
     lateinit var mockRepository: TextRecognitionContract.Repository
-
-    @InjectMockKs
     lateinit var recognizeTextUseCase: RecognizeTextUseCase
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
+        MockitoAnnotations.openMocks(this)
+        recognizeTextUseCase = RecognizeTextUseCase(mockRepository)
     }
 
     @Test
     fun `test recognize text from image`() = runBlocking {
-        coEvery { mockRepository.processImageForOCR(any()) } returns Result.success("こんにちは")
+        `when`(
+            mockRepository.processImageForOCR(any())
+        )
+            .doReturn(
+                Result.success("こんにちは")
+            )
 
-        val dummyImage = mockk<Bitmap>(relaxed = true)
+        val dummyImage = mock<Bitmap>(withSettings(lenient = true))
         val result = recognizeTextUseCase(dummyImage)
 
         assertEquals("こんにちは", result.getOrNull())
