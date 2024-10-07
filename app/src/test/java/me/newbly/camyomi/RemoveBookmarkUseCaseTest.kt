@@ -27,7 +27,7 @@ class RemoveBookmarkUseCaseTest : BaseTest() {
         `when`(mockAppRepository.removeBookmark(id))
             .thenReturn(Result.success(true))
 
-        val hasRemovedBookmark = removeBookmarkUseCase(id)
+        val hasRemovedBookmark = removeBookmarkUseCase(id).getOrNull()
 
         verify(mockAppRepository).removeBookmark(id)
         assertEquals(true, hasRemovedBookmark)

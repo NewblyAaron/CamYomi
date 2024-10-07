@@ -27,7 +27,7 @@ class SaveToRecentlyScannedUseCaseTest : BaseTest() {
         `when`(mockAppRepository.saveToRecentlyScanned(textToSave))
             .thenReturn(Result.success(true))
 
-        val hasSavedToRecentScans = saveToRecentlyScannedUseCase(textToSave)
+        val hasSavedToRecentScans = saveToRecentlyScannedUseCase(textToSave).getOrNull()
 
         verify(mockAppRepository).saveToRecentlyScanned(textToSave)
         assertEquals(true, hasSavedToRecentScans)
