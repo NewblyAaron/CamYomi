@@ -25,7 +25,7 @@ class FetchDefinitionsUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `fetch definitions by word`(): Unit = runBlocking {
+    fun `given valid word when fetching definitions expect list of definitions`(): Unit = runBlocking {
         val word = "今日"
         val expectedDefinitions = DEFINITION_LIST
 

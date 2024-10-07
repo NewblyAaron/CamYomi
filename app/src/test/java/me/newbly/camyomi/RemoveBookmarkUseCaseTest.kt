@@ -21,7 +21,7 @@ class RemoveBookmarkUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `remove bookmark`(): Unit = runBlocking {
+    fun `given valid id when removing bookmark expect successful removal`(): Unit = runBlocking {
         val id = 1
 
         `when`(mockAppRepository.removeBookmark(id))

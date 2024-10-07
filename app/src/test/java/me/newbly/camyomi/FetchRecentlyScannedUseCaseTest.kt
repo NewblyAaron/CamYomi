@@ -21,7 +21,7 @@ class FetchRecentlyScannedUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `fetch recent scans`(): Unit = runBlocking {
+    fun `given recent scans exist when fetching recent scans expect list of recent scans`(): Unit = runBlocking {
         val expectedRecentScans = RECENT_SCAN_LIST
 
         `when`(mockAppRepository.getRecentlyScanned())

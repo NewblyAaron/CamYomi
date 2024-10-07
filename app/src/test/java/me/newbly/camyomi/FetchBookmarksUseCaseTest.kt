@@ -24,7 +24,7 @@ class FetchBookmarksUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `fetch bookmarks`(): Unit = runBlocking {
+    fun `given bookmarks exist when fetching bookmarks expect list of definitions`(): Unit = runBlocking {
         val bookmarks = BOOKMARK_LIST
         val bookmarkIds = bookmarks.map { it.entryId }.toList()
         val expectedDefinitions = DEFINITION_LIST

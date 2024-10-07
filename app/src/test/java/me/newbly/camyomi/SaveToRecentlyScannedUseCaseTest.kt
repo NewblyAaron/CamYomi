@@ -21,7 +21,7 @@ class SaveToRecentlyScannedUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `save text to recently scanned`(): Unit = runBlocking {
+    fun `when save text to recently scanned expect successful save`(): Unit = runBlocking {
         val textToSave = "言葉"
 
         `when`(mockAppRepository.saveToRecentlyScanned(textToSave))

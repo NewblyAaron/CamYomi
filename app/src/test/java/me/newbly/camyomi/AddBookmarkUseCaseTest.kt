@@ -21,7 +21,7 @@ class AddBookmarkUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `add bookmark`(): Unit = runBlocking {
+    fun `given valid id when adding bookmark expect successful adding`(): Unit = runBlocking {
         val id = 1
 
         `when`(mockAppRepository.addBookmark(id))

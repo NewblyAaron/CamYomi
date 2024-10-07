@@ -23,7 +23,7 @@ class RecognizeTextUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `recognize text from image`() = runBlocking {
+    fun `given valid image with text when scanning image expect recognized text`() = runBlocking {
         val dummyImage = mock<Bitmap>(withSettings(lenient = true))
 
         `when`(mockTextRecognitionRepository.processImageForOCR(dummyImage))
