@@ -26,15 +26,12 @@ class RecognizeTextUseCaseTest : BaseTest() {
     fun `recognize text from image`() = runBlocking {
         val dummyImage = mock<Bitmap>(withSettings(lenient = true))
 
-        `when`(
-            mockTextRecognitionRepository.processImageForOCR(dummyImage)
-        ).thenReturn(
-            Result.success("こんにちは")
-        )
+        `when`(mockTextRecognitionRepository.processImageForOCR(dummyImage))
+            .thenReturn(Result.success("こんにちは"))
 
-        val result = recognizeTextUseCase(dummyImage)
+        val result = recognizeTextUseCase(dummyImage).getOrNull()
 
         verify(mockTextRecognitionRepository).processImageForOCR(dummyImage)
-        assertEquals("こんにちは", result.getOrNull())
+        assertEquals("こんにちは", result)
     }
 }

@@ -27,7 +27,7 @@ class FetchDefinitionsUseCaseTest : BaseTest() {
     @Test
     fun `fetch definitions by word`(): Unit = runBlocking {
         val word = "今日"
-        val expectedDefinitions = SampleData.sampleDictionaryEntryList
+        val expectedDefinitions = DEFINITION_LIST
 
         `when`(mockJMdictRepository.getDictionaryEntries(word))
             .thenReturn(Result.success(expectedDefinitions))
@@ -38,5 +38,14 @@ class FetchDefinitionsUseCaseTest : BaseTest() {
 
         verify(mockJMdictRepository).getDictionaryEntries(word)
         assertEquals(expectedDefinitions, definitions)
+    }
+
+    companion object {
+        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
+        private val DEFINITION_LIST = listOf(
+            SAMPLE_DEFINITION,
+            SAMPLE_DEFINITION.copy(id = 1579111),
+            SAMPLE_DEFINITION.copy(id = 1579112)
+        )
     }
 }

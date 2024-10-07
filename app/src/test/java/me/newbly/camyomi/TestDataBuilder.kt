@@ -2,10 +2,15 @@ package me.newbly.camyomi
 
 import me.newbly.camyomi.domain.entity.Bookmark
 import me.newbly.camyomi.domain.entity.DictionaryEntry
+import me.newbly.camyomi.domain.entity.RecentScan
 
-class SampleData {
+class TestDataBuilder {
     companion object {
-        val sampleDictionaryEntryList = listOf<DictionaryEntry>(
+        fun buildDefinition(): DictionaryEntry = SAMPLE_DEFINITION
+        fun buildBookmark(): Bookmark = SAMPLE_BOOKMARK
+        fun buildRecentScan(): RecentScan = SAMPLE_RECENT_SCAN
+
+        private val SAMPLE_DEFINITION =
             DictionaryEntry(
                 id = 1579110,
                 keb = "今日",
@@ -24,10 +29,13 @@ class SampleData {
                 field = null,
                 dial = null
             )
-        )
 
-        val sampleBookmarkList = listOf<Bookmark>(
+        private val SAMPLE_BOOKMARK =
             Bookmark(entryId = 1579110)
-        )
+
+        private val SAMPLE_RECENT_SCAN =
+            RecentScan(
+                text = "今日は暑いですね", // kyou wa atsui desu ne (today is hot, isn't it?)
+            )
     }
 }

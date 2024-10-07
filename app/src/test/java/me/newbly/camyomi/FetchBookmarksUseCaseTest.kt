@@ -25,9 +25,9 @@ class FetchBookmarksUseCaseTest : BaseTest() {
 
     @Test
     fun `fetch bookmarks`(): Unit = runBlocking {
-        val bookmarks = SampleData.sampleBookmarkList
+        val bookmarks = BOOKMARK_LIST
         val bookmarkIds = bookmarks.map { it.entryId }.toList()
-        val expectedDefinitions = SampleData.sampleDictionaryEntryList
+        val expectedDefinitions = DEFINITION_LIST
 
         `when`(mockAppRepository.getBookmarks())
             .thenReturn(Result.success(bookmarks))
@@ -40,5 +40,21 @@ class FetchBookmarksUseCaseTest : BaseTest() {
         verify(mockJMdictRepository).getDictionaryEntries(bookmarkIds)
 
         assertEquals(expectedDefinitions, definitions)
+    }
+
+    companion object {
+        private val SAMPLE_BOOKMARK = TestDataBuilder.buildBookmark()
+        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
+
+        private val BOOKMARK_LIST = listOf(
+            SAMPLE_BOOKMARK,
+            SAMPLE_BOOKMARK.copy(id = 1579111),
+            SAMPLE_BOOKMARK.copy(id = 1579112)
+        )
+        private val DEFINITION_LIST = listOf(
+            SAMPLE_DEFINITION,
+            SAMPLE_DEFINITION.copy(id = 1579111),
+            SAMPLE_DEFINITION.copy(id = 1579112)
+        )
     }
 }

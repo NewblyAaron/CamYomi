@@ -1,5 +1,6 @@
 package me.newbly.camyomi
 
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import me.newbly.camyomi.domain.usecase.SaveToRecentlyScannedUseCase
 import org.junit.Before
@@ -23,14 +24,12 @@ class SaveToRecentlyScannedUseCaseTest : BaseTest() {
     fun `save text to recently scanned`(): Unit = runBlocking {
         val textToSave = "言葉"
 
-        `when`(
-            mockAppRepository.saveToRecentlyScanned(textToSave)
-        ).thenReturn(
-            Result.success(true)
-        )
+        `when`(mockAppRepository.saveToRecentlyScanned(textToSave))
+            .thenReturn(Result.success(true))
 
-        saveToRecentlyScannedUseCase(textToSave)
+        val hasSavedToRecentScans = saveToRecentlyScannedUseCase(textToSave)
 
         verify(mockAppRepository).saveToRecentlyScanned(textToSave)
+        assertEquals(true, hasSavedToRecentScans)
     }
 }

@@ -1,5 +1,6 @@
 package me.newbly.camyomi
 
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import me.newbly.camyomi.domain.usecase.AddBookmarkUseCase
 import org.junit.Before
@@ -26,8 +27,9 @@ class AddBookmarkUseCaseTest : BaseTest() {
         `when`(mockAppRepository.addBookmark(id))
             .thenReturn(Result.success(true))
 
-        addBookmarkUseCase(id)
+        val hasAddedBookmark = addBookmarkUseCase(id).getOrNull()
 
         verify(mockAppRepository).addBookmark(id)
+        assertEquals(true, hasAddedBookmark)
     }
 }
