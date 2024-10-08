@@ -24,7 +24,8 @@ data class DictionaryEntry(
     @ColumnInfo(name = "ex_text") val exText: String?,
     @ColumnInfo(name = "ex_sent") val exSent: String?,
 ) {
-    @Ignore var isBookmarked: Boolean = false
+    @Ignore
+    var isBookmarked: Boolean = false
 
     fun getMainKanjiReading(): String {
         if (keb.isNullOrBlank()) return ""
@@ -64,7 +65,7 @@ data class DictionaryEntry(
             for (reading in kanaReadings) {
                 formattedString += "$reading, "
             }
-            formattedString =  formattedString
+            formattedString = formattedString
                 .trimEnd()
                 .removeSuffix(",")
         }

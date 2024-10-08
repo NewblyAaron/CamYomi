@@ -29,6 +29,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
     buildTypes {
         release {
@@ -40,14 +41,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     packaging {
         resources.excludes.add("META-INF/*")
@@ -80,6 +81,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.timber)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
@@ -87,6 +89,8 @@ dependencies {
     testImplementation(libs.androidx.test.ext.junit)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.robolectric)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
     testImplementation(libs.hilt.testing)
     testImplementation(libs.room.test)
     kspTest(libs.hilt.compiler)

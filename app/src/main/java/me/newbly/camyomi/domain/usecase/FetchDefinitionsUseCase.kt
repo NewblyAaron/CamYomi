@@ -12,7 +12,7 @@ class FetchDefinitionsUseCase @Inject constructor(
     override suspend fun execute(word: String): Result<List<DictionaryEntry>> {
         return try {
             val entries =
-                jmdictRepository.getDictionaryEntries("$word%").getOrThrow().toMutableList()
+                jmdictRepository.getDictionaryEntries(word).getOrThrow().toMutableList()
             entries.forEach {
                 it.isBookmarked = appRepository.isBookmarked(it.id).getOrThrow()
             }

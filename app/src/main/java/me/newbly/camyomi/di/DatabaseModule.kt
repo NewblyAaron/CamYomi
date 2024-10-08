@@ -26,7 +26,8 @@ class DatabaseModule {
             .build()
 
     @Provides
-    fun provideDictionaryEntryDao(jmdictDb: JMdictDatabase): DictionaryEntryDao = jmdictDb.dictionaryEntryDao()
+    fun provideDictionaryEntryDao(jmdictDb: JMdictDatabase): DictionaryEntryDao =
+        jmdictDb.dictionaryEntryDao()
 
     @Provides
     @Singleton

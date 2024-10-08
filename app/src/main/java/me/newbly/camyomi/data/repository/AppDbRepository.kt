@@ -1,23 +1,23 @@
 package me.newbly.camyomi.data.repository
 
-import android.util.Log
 import me.newbly.camyomi.data.local.app.dao.BookmarkDao
 import me.newbly.camyomi.data.local.app.dao.RecentScanDao
 import me.newbly.camyomi.domain.entity.Bookmark
 import me.newbly.camyomi.domain.entity.RecentScan
 import me.newbly.camyomi.presentation.contract.AppDbContract
+import timber.log.Timber
 import javax.inject.Inject
 
 class AppDbRepository @Inject constructor(
     private val recentScanDao: RecentScanDao,
     private val bookmarkDao: BookmarkDao
-): AppDbContract.Repository {
+) : AppDbContract.Repository {
     override suspend fun getRecentlyScanned(): Result<List<RecentScan>> {
         return try {
             val list = recentScanDao.getRecentlyScanned()
             Result.success(list)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
@@ -28,18 +28,18 @@ class AppDbRepository @Inject constructor(
                 bookmarkDao.getBookmarks()
             )
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
 
     override suspend fun saveToRecentlyScanned(scannedText: String): Result<Boolean> {
         return try {
-            val newRecentScan = RecentScan(text = scannedText, scannedAt = System.currentTimeMillis())
+            val newRecentScan = RecentScan(text = scannedText)
             recentScanDao.insert(newRecentScan)
             Result.success(true)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
@@ -52,7 +52,7 @@ class AppDbRepository @Inject constructor(
             bookmarkDao.insert(newBookmark)
             Result.success(true)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
@@ -62,7 +62,7 @@ class AppDbRepository @Inject constructor(
             bookmarkDao.delete(bookmarkId)
             Result.success(true)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
@@ -73,12 +73,10 @@ class AppDbRepository @Inject constructor(
                 bookmarkDao.isBookmarked(dictionaryEntryId) == 1
             )
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
 
-    companion object {
-        private val TAG_NAME = AppDbRepository::class.simpleName
-    }
+    private fun handleException(e: Exception) = Timber.e(e)
 }

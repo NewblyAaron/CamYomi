@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class RecentScan(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     var text: String,
-    @ColumnInfo(name = "scanned_at") val scannedAt: Long
+    @ColumnInfo(name = "scanned_at") val scannedAt: Long = System.currentTimeMillis()
 )

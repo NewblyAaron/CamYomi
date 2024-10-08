@@ -1,19 +1,15 @@
 package me.newbly.camyomi.data.repository
 
 import android.graphics.Bitmap
-import android.util.Log
-import com.google.mlkit.vision.common.InputImage
-import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
-import me.newbly.camyomi.data.local.jmdictdb.dao.DictionaryEntryDao
 import me.newbly.camyomi.data.local.mlkit.MLKitService
-import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
+import timber.log.Timber
 import javax.inject.Inject
 
 class TextRecognitionRepository @Inject constructor(
     private val mlKitService: MLKitService
-): TextRecognitionContract.Repository {
-    private class NoJapaneseTextExtractedException(message: String): Exception(message)
+) : TextRecognitionContract.Repository {
+    private class NoJapaneseTextExtractedException(message: String) : Exception(message)
 
     private fun extractJapaneseText(text: String): String {
         // Regular expression to match Japanese characters (Hiragana, Katakana, and Kanji)
@@ -26,22 +22,18 @@ class TextRecognitionRepository @Inject constructor(
     }
 
     override suspend fun processImageForOCR(bitmapImage: Bitmap): Result<String> {
-        val inputImage = InputImage.fromBitmap(bitmapImage, 0)
-
         return try {
-            val recognizedText = mlKitService.recognizeTextFromImage(inputImage).getOrThrow()
+            val recognizedText = mlKitService.recognizeTextFromImage(bitmapImage).getOrThrow()
             val formattedText = extractJapaneseText(recognizedText)
             if (formattedText.isEmpty()) {
                 throw NoJapaneseTextExtractedException("No japanese text was found.")
             }
             Result.success(formattedText)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
 
-    companion object {
-        private val TAG_NAME = TextRecognitionRepository::class.simpleName
-    }
+    private fun handleException(e: Exception) = Timber.e(e)
 }
