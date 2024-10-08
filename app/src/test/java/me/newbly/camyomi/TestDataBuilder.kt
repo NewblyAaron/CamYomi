@@ -1,14 +1,49 @@
 package me.newbly.camyomi
 
+import com.atilika.kuromoji.TokenizerBase
+import com.atilika.kuromoji.ipadic.Tokenizer
 import me.newbly.camyomi.domain.entity.Bookmark
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.domain.entity.RecentScan
+import me.newbly.camyomi.domain.entity.Word
 
 class TestDataBuilder {
+    data class JapaneseText(
+        private val text: String
+    ) {
+        private val words: List<Word>
+
+        init {
+            words = tokenizeText(text)
+        }
+
+        fun getSentence(): String = text
+        fun getWords(): List<Word> = words
+
+        override fun toString(): String = text
+
+        private fun tokenizeText(text: String): List<Word> {
+            val tokenizer = Tokenizer.Builder().mode(TokenizerBase.Mode.SEARCH).build()
+            val tokens = tokenizer.tokenize(text)
+            val words = mutableListOf<Word>()
+            tokens.forEach {
+                words.add(Word(
+                    originalForm = it.surface,
+                    baseForm = it.baseForm
+                ))
+            }
+
+            return words
+        }
+    }
+
     companion object {
+        fun buildJapaneseText(text: String = SAMPLE_SENTENCE): JapaneseText = JapaneseText(text)
         fun buildDefinition(): DictionaryEntry = SAMPLE_DEFINITION
         fun buildBookmark(): Bookmark = SAMPLE_BOOKMARK
         fun buildRecentScan(): RecentScan = SAMPLE_RECENT_SCAN
+
+        private const val SAMPLE_SENTENCE = "今日は暑いですね"
 
         private val SAMPLE_DEFINITION =
             DictionaryEntry(
