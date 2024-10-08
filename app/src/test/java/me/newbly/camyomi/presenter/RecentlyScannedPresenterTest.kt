@@ -38,7 +38,7 @@ class RecentlyScannedPresenterTest : BaseTest() {
     @Test
     fun `given recent scans exist when getting recent scans expect list of recent scans`(): Unit =
         runBlocking {
-            val expectedRecentScans = listOf(TestDataBuilder.buildRecentScan())
+            val expectedRecentScans = RECENT_SCAN_LIST
 
             doNothing().`when`(view).showRecentScans(any())
 
@@ -54,7 +54,7 @@ class RecentlyScannedPresenterTest : BaseTest() {
     @Test
     fun `when recent scan entry clicked expect view to navigate to scanner fragment`(): Unit =
         runBlocking {
-            val recentScan = TestDataBuilder.buildRecentScan()
+            val recentScan = SAMPLE_RECENT_SCAN
 
             doNothing().`when`(view).navigateToScanner(any())
 
@@ -62,4 +62,13 @@ class RecentlyScannedPresenterTest : BaseTest() {
 
             verify(view).navigateToScanner(recentScan.text)
         }
+
+    companion object {
+        private val SAMPLE_RECENT_SCAN = TestDataBuilder.buildRecentScan()
+        private val RECENT_SCAN_LIST = listOf(
+            SAMPLE_RECENT_SCAN,
+            SAMPLE_RECENT_SCAN.copy(text = "今日は寒いですね"),
+            SAMPLE_RECENT_SCAN.copy(text = "僕の名前はエーロンだ")
+        )
+    }
 }

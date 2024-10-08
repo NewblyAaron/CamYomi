@@ -106,9 +106,8 @@ class ScannerPresenterTest : BaseTest() {
     @Test
     fun `when image captured expect show recognized text`(): Unit = runBlocking {
         val dummyImage = mock<Bitmap>(withSettings(lenient = true))
-        val japaneseText = TestDataBuilder.buildJapaneseText()
-        val expectedText = japaneseText.getSentence()
-        val expectedWords = japaneseText.getWords()
+        val expectedText = SAMPLE_TEXT.getSentence()
+        val expectedWords = SAMPLE_TEXT.getWords()
 
         doNothing().`when`(view).showRecognizedText(any())
 
@@ -132,11 +131,8 @@ class ScannerPresenterTest : BaseTest() {
 
     @Test
     fun `when word selected expect show definitions of word`(): Unit = runBlocking {
-        val japaneseText = TestDataBuilder.buildJapaneseText()
-        val selectedWord = japaneseText.getWords()[0]
-        val expectedDefinitions = listOf(
-            TestDataBuilder.buildDefinition()
-        )
+        val selectedWord = SAMPLE_TEXT.getWords()[0]
+        val expectedDefinitions = DEFINITION_LIST
 
         doNothing().`when`(view).showDefinitions(any())
 
@@ -154,14 +150,23 @@ class ScannerPresenterTest : BaseTest() {
 
     @Test
     fun `when recently scanned text passed expect show recent scan text`(): Unit = runBlocking {
-        val recentlyPassedText = TestDataBuilder.buildJapaneseText()
-        val passedText = recentlyPassedText.getSentence()
-        val expectedWords = recentlyPassedText.getWords()
+        val passedText = SAMPLE_TEXT.getSentence()
+        val expectedWords = SAMPLE_TEXT.getWords()
 
         doNothing().`when`(view).showRecognizedText(any())
 
         presenter.loadPassedArgs(passedText)
 
         verify(view).showRecognizedText(expectedWords)
+    }
+
+    companion object {
+        private val SAMPLE_TEXT = TestDataBuilder.buildJapaneseText()
+        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
+        private val DEFINITION_LIST = listOf(
+            SAMPLE_DEFINITION,
+            SAMPLE_DEFINITION.copy(id = 1579111),
+            SAMPLE_DEFINITION.copy(id = 1579112)
+        )
     }
 }

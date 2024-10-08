@@ -44,7 +44,7 @@ class BookmarksPresenterTest : BaseTest() {
     @Test
     fun `given bookmarks exist when getting bookmarks expect list of bookmarks`(): Unit =
         runBlocking {
-            val expectedDefinitions = listOf(TestDataBuilder.buildDefinition())
+            val expectedDefinitions = DEFINITION_LIST
 
             doNothing().`when`(view).showBookmarkedDefinitions(any())
 
@@ -71,5 +71,14 @@ class BookmarksPresenterTest : BaseTest() {
         val result = presenter.onBookmarkButtonClicked(id)
 
         assertThat(result, `is`(true))
+    }
+
+    companion object {
+        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
+        private val DEFINITION_LIST = listOf(
+            SAMPLE_DEFINITION,
+            SAMPLE_DEFINITION.copy(id = 1579111),
+            SAMPLE_DEFINITION.copy(id = 1579112)
+        )
     }
 }
