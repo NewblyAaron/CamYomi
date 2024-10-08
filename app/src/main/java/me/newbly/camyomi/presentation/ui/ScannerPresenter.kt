@@ -9,6 +9,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import me.newbly.camyomi.domain.entity.Word
 import me.newbly.camyomi.domain.usecase.AddBookmarkUseCase
 import me.newbly.camyomi.domain.usecase.FetchDefinitionsUseCase
 import me.newbly.camyomi.domain.usecase.RecognizeTextUseCase
@@ -34,9 +35,8 @@ class ScannerPresenter @AssistedInject constructor(
     override fun onImagePickerButtonClicked() = view.launchImagePicker()
     override suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean =
         saveNewBookmark(dictionaryEntryId)
-
     override suspend fun onImageCaptured(image: Bitmap) = processTextRecognition(image)
-    override suspend fun onTextClicked(selectedText: String) = getDefinitionsFor(selectedText)
+    override suspend fun onWordSelected(selectedText: String) = getDefinitionsFor(selectedText)
     override suspend fun loadPassedArgs(passedText: String) = processRecentScan(passedText)
 
     private suspend fun processTextRecognition(image: Bitmap) {
@@ -95,18 +95,18 @@ class ScannerPresenter @AssistedInject constructor(
         }
     }
 
-    private suspend fun tokenizeText(text: String): Map<String, String> =
+    private suspend fun tokenizeText(text: String): List<Word> =
         withContext(Dispatchers.IO) {
             val tokens = tokenizer.tokenize(text)
-            val wordMap = mutableMapOf<String, String>()
-            var log = ""
+            val words = mutableListOf<Word>()
             tokens.forEach {
-                log += "${it.surface}\t${it.allFeatures}\n"
-                wordMap[it.surface] = it.baseForm
+                words.add(Word(
+                    originalForm = it.surface,
+                    baseForm = it.baseForm
+                ))
             }
-            Log.d("OCRScannerPresenter", log)
 
-            return@withContext wordMap
+            return@withContext words
         }
 
     private fun handleException(e: Exception) {

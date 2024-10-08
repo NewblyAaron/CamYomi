@@ -40,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import me.newbly.camyomi.databinding.FragmentScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
+import me.newbly.camyomi.domain.entity.Word
 import me.newbly.camyomi.presentation.contract.ScannerContract
 import me.newbly.camyomi.presentation.ui.adapter.DefinitionAdapter
 import javax.inject.Inject
@@ -59,7 +60,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
     private val definitionAdapter = DefinitionAdapter()
-    private var recognizedTextMap = mapOf<String, String>()
+    private var recognizedWords = listOf<Word>()
 
     private var isFabExtended = false
 
@@ -188,10 +189,10 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         }
     }
 
-    override fun showRecognizedText(wordMap: Map<String, String>) {
-        recognizedTextMap = wordMap
+    override fun showRecognizedText(words: List<Word>) {
+        recognizedWords = words
         binding.composeView.setContent {
-            RecognizedJapaneseText(recognizedTextMap)
+            RecognizedJapaneseText(recognizedWords)
         }
     }
 
@@ -211,7 +212,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                RecognizedJapaneseText(recognizedTextMap)
+                RecognizedJapaneseText(recognizedWords)
             }
         }
 
@@ -266,7 +267,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     @Preview
     @Composable
     private fun RecognizedJapaneseText(
-        map: Map<String, String> = mapOf(),
+        words: List<Word> = recognizedWords,
     ) {
         val selectedText: MutableState<String> = rememberSaveable { mutableStateOf("") }
         val color = if (isSystemInDarkTheme()) Color.White else Color.Black
@@ -276,11 +277,11 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                if (map.isEmpty()) {
+                if (words.isEmpty()) {
                     Text("Recognized text will display here", color = color, fontSize = 20.sp)
                 } else {
-                    for (word in map.entries) {
-                        val style = if (word.key == selectedText.value) {
+                    for (word in words) {
+                        val style = if (word.originalForm == selectedText.value) {
                             MaterialTheme.typography.bodyLarge.copy(
                                 color = color,
                                 fontSize = 20.sp,
@@ -294,14 +295,14 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                         }
 
                         Text(
-                            word.key,
+                            word.originalForm,
                             style = style,
                             modifier = Modifier
                                 .clickable {
-                                    selectedText.value = word.key
+                                    selectedText.value = word.originalForm
 
                                     lifecycleScope.launch {
-                                        presenter.onTextClicked(word.value)
+                                        presenter.onWordSelected(word.baseForm)
                                     }
                                 }
                         )

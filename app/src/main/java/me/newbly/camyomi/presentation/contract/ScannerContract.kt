@@ -2,6 +2,7 @@ package me.newbly.camyomi.presentation.contract
 
 import android.graphics.Bitmap
 import me.newbly.camyomi.domain.entity.DictionaryEntry
+import me.newbly.camyomi.domain.entity.Word
 
 interface ScannerContract {
     interface View {
@@ -12,7 +13,7 @@ interface ScannerContract {
         fun hideRecognizeProgress()
         fun hideDefinitionsProgress()
         fun toggleFabMenu()
-        fun showRecognizedText(wordMap: Map<String, String>)
+        fun showRecognizedText(words: List<Word>)
         fun showDefinitions(entries: List<DictionaryEntry>)
         fun showError(errorMessage: String)
     }
@@ -23,7 +24,7 @@ interface ScannerContract {
         fun onImagePickerButtonClicked()
         suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean
         suspend fun onImageCaptured(image: Bitmap)
-        suspend fun onTextClicked(selectedText: String)
+        suspend fun onWordSelected(selectedText: String)
         suspend fun loadPassedArgs(passedText: String)
     }
 }
