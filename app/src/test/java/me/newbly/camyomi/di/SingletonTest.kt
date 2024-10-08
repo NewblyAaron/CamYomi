@@ -1,25 +1,21 @@
-package me.newbly.camyomi
+package me.newbly.camyomi.di
 
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
+import me.newbly.camyomi.HiltBaseTest
 import me.newbly.camyomi.data.local.app.AppDatabase
 import me.newbly.camyomi.data.local.jmdictdb.JMdictDatabase
 import me.newbly.camyomi.presentation.contract.AppDbContract
 import me.newbly.camyomi.presentation.contract.JMdictContract
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
 @HiltAndroidTest
-class SingletonUnitTest : HiltBaseTest() {
+class SingletonTest : HiltBaseTest() {
     @Inject
     lateinit var jmdictDatabase1: JMdictDatabase
     @Inject

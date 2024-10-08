@@ -1,8 +1,13 @@
-package me.newbly.camyomi
+package me.newbly.camyomi.usecase
 
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
+import me.newbly.camyomi.BaseTest
+import me.newbly.camyomi.TestDataBuilder
 import me.newbly.camyomi.domain.usecase.FetchRecentlyScannedUseCase
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,11 +35,11 @@ class FetchRecentlyScannedUseCaseTest : BaseTest() {
         val recentScans = fetchRecentlyScannedUseCase(Unit).getOrNull()
 
         verify(mockAppRepository).getRecentlyScanned()
-        assertEquals(expectedRecentScans, recentScans)
+        assertThat(recentScans, `is`(equalTo(expectedRecentScans)))
     }
 
     companion object {
-        private val SAMPLE_RECENT_SCAN = TestDataBuilder.buildRecentScan()
+        private val SAMPLE_RECENT_SCAN = TestDataBuilder.Companion.buildRecentScan()
         private val RECENT_SCAN_LIST = listOf(
             SAMPLE_RECENT_SCAN,
             SAMPLE_RECENT_SCAN.copy(text = "今日は寒いですね"),

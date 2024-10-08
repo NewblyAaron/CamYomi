@@ -1,8 +1,12 @@
-package me.newbly.camyomi
+package me.newbly.camyomi.usecase
 
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
+import me.newbly.camyomi.BaseTest
+import me.newbly.camyomi.TestDataBuilder
 import me.newbly.camyomi.domain.usecase.FetchBookmarksUseCase
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,12 +43,12 @@ class FetchBookmarksUseCaseTest : BaseTest() {
         verify(mockAppRepository).getBookmarks()
         verify(mockJMdictRepository).getDictionaryEntries(bookmarkIds)
 
-        assertEquals(expectedDefinitions, definitions)
+        assertThat(definitions, `is`(equalTo(expectedDefinitions)))
     }
 
     companion object {
-        private val SAMPLE_BOOKMARK = TestDataBuilder.buildBookmark()
-        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
+        private val SAMPLE_BOOKMARK = TestDataBuilder.Companion.buildBookmark()
+        private val SAMPLE_DEFINITION = TestDataBuilder.Companion.buildDefinition()
 
         private val BOOKMARK_LIST = listOf(
             SAMPLE_BOOKMARK,

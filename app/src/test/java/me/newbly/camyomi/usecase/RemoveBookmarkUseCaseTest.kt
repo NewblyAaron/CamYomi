@@ -1,8 +1,11 @@
-package me.newbly.camyomi
+package me.newbly.camyomi.usecase
 
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
+import me.newbly.camyomi.BaseTest
 import me.newbly.camyomi.domain.usecase.RemoveBookmarkUseCase
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,6 +33,6 @@ class RemoveBookmarkUseCaseTest : BaseTest() {
         val hasRemovedBookmark = removeBookmarkUseCase(id).getOrNull()
 
         verify(mockAppRepository).removeBookmark(id)
-        assertEquals(true, hasRemovedBookmark)
+        assertThat(hasRemovedBookmark, `is`(true))
     }
 }
