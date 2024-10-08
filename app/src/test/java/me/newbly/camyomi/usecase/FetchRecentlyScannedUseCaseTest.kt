@@ -39,7 +39,7 @@ class FetchRecentlyScannedUseCaseTest : BaseTest() {
         }
 
     companion object {
-        private val SAMPLE_RECENT_SCAN = TestDataBuilder.Companion.buildRecentScan()
+        private val SAMPLE_RECENT_SCAN = TestDataBuilder.buildRecentScan()
         private val RECENT_SCAN_LIST = listOf(
             SAMPLE_RECENT_SCAN,
             SAMPLE_RECENT_SCAN.copy(text = "今日は寒いですね"),

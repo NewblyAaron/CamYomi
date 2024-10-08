@@ -46,7 +46,7 @@ class FetchDefinitionsUseCaseTest : BaseTest() {
         }
 
     companion object {
-        private val SAMPLE_DEFINITION = TestDataBuilder.Companion.buildDefinition()
+        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
         private val DEFINITION_LIST = listOf(
             SAMPLE_DEFINITION,
             SAMPLE_DEFINITION.copy(id = 1579111),

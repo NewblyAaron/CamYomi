@@ -48,8 +48,8 @@ class FetchBookmarksUseCaseTest : BaseTest() {
         }
 
     companion object {
-        private val SAMPLE_BOOKMARK = TestDataBuilder.Companion.buildBookmark()
-        private val SAMPLE_DEFINITION = TestDataBuilder.Companion.buildDefinition()
+        private val SAMPLE_BOOKMARK = TestDataBuilder.buildBookmark()
+        private val SAMPLE_DEFINITION = TestDataBuilder.buildDefinition()
 
         private val BOOKMARK_LIST = listOf(
             SAMPLE_BOOKMARK,
