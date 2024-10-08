@@ -31,7 +31,7 @@ workflow:
 default:
   tags:
     - intern
-  cache:
+  cache: &gradle-cache
     key: $CI_COMMIT_REF_SLUG
     paths:
       - .gradle/wrapper
@@ -74,6 +74,9 @@ lintDebug:
   stage: build
   script:
     - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+  cache:
+    <<: *gradle-cache
+    policy: pull # should not push
   artifacts:
     paths:
       - app/lint/reports/lint-results-debug.html
@@ -82,7 +85,6 @@ lintDebug:
 
 # Make Project
 assembleDebug:
-  needs: [lintDebug]
   interruptible: true
   stage: build
   script:
@@ -98,3 +100,6 @@ debugTests:
   stage: test
   script:
     - ./gradlew -Pci --console=plain :app:testDebug
+  cache:
+    <<: *gradle-cache
+    policy: pull # should not push
