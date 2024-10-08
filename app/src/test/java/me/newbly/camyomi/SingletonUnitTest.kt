@@ -18,17 +18,8 @@ import org.robolectric.annotation.Config
 import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
-@Config(application = HiltTestApplication::class)
 @HiltAndroidTest
-class SingletonUnitTest {
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @Before
-    fun setUp() {
-        hiltRule.inject()
-    }
-
+class SingletonUnitTest : HiltBaseTest() {
     @Inject
     lateinit var jmdictDatabase1: JMdictDatabase
     @Inject
