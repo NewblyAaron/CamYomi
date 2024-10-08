@@ -1,6 +1,5 @@
 package me.newbly.camyomi.usecase
 
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import me.newbly.camyomi.BaseTest
 import me.newbly.camyomi.domain.usecase.SaveToRecentlyScannedUseCase

@@ -1,7 +1,6 @@
 package me.newbly.camyomi.data.local.app.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import me.newbly.camyomi.domain.entity.RecentScan

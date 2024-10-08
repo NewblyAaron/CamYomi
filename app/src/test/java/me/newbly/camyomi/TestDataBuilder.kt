@@ -27,10 +27,12 @@ class TestDataBuilder {
             val tokens = tokenizer.tokenize(text)
             val words = mutableListOf<Word>()
             tokens.forEach {
-                words.add(Word(
-                    originalForm = it.surface,
-                    baseForm = it.baseForm
-                ))
+                words.add(
+                    Word(
+                        originalForm = it.surface,
+                        baseForm = it.baseForm
+                    )
+                )
             }
 
             return words

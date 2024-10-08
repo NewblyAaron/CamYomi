@@ -29,20 +29,21 @@ class FetchDefinitionsUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `given valid word when fetching definitions expect list of definitions`(): Unit = runBlocking {
-        val word = "今日"
-        val expectedDefinitions = DEFINITION_LIST
+    fun `given valid word when fetching definitions expect list of definitions`(): Unit =
+        runBlocking {
+            val word = "今日"
+            val expectedDefinitions = DEFINITION_LIST
 
-        `when`(mockJMdictRepository.getDictionaryEntries(word))
-            .thenReturn(Result.success(expectedDefinitions))
-        `when`(mockAppRepository.isBookmarked(any<Int>()))
-            .thenReturn(Result.success(false))
+            `when`(mockJMdictRepository.getDictionaryEntries(word))
+                .thenReturn(Result.success(expectedDefinitions))
+            `when`(mockAppRepository.isBookmarked(any<Int>()))
+                .thenReturn(Result.success(false))
 
-        val definitions = fetchDefinitionsUseCase(word).getOrNull()
+            val definitions = fetchDefinitionsUseCase(word).getOrNull()
 
-        verify(mockJMdictRepository).getDictionaryEntries(word)
-        assertThat(definitions, `is`(equalTo(expectedDefinitions)))
-    }
+            verify(mockJMdictRepository).getDictionaryEntries(word)
+            assertThat(definitions, `is`(equalTo(expectedDefinitions)))
+        }
 
     companion object {
         private val SAMPLE_DEFINITION = TestDataBuilder.Companion.buildDefinition()

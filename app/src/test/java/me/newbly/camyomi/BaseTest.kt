@@ -10,8 +10,10 @@ import org.mockito.MockitoAnnotations
 open class BaseTest {
     @Mock
     protected lateinit var mockTextRecognitionRepository: TextRecognitionContract.Repository
+
     @Mock
     protected lateinit var mockAppRepository: AppDbContract.Repository
+
     @Mock
     protected lateinit var mockJMdictRepository: JMdictContract.Repository
 

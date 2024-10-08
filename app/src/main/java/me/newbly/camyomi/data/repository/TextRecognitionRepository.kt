@@ -8,8 +8,8 @@ import javax.inject.Inject
 
 class TextRecognitionRepository @Inject constructor(
     private val mlKitService: MLKitService
-): TextRecognitionContract.Repository {
-    private class NoJapaneseTextExtractedException(message: String): Exception(message)
+) : TextRecognitionContract.Repository {
+    private class NoJapaneseTextExtractedException(message: String) : Exception(message)
 
     private fun extractJapaneseText(text: String): String {
         // Regular expression to match Japanese characters (Hiragana, Katakana, and Kanji)

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class JMdictRepository @Inject constructor(
     private val dictionaryEntryDao: DictionaryEntryDao
-): JMdictContract.Repository {
+) : JMdictContract.Repository {
     override suspend fun getDictionaryEntries(word: String): Result<List<DictionaryEntry>> {
         return try {
             val queryText = "$word%"

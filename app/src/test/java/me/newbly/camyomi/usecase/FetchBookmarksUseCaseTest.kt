@@ -28,23 +28,24 @@ class FetchBookmarksUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `given bookmarks exist when fetching bookmarks expect list of definitions`(): Unit = runBlocking {
-        val bookmarks = BOOKMARK_LIST
-        val bookmarkIds = bookmarks.map { it.entryId }.toList()
-        val expectedDefinitions = DEFINITION_LIST
+    fun `given bookmarks exist when fetching bookmarks expect list of definitions`(): Unit =
+        runBlocking {
+            val bookmarks = BOOKMARK_LIST
+            val bookmarkIds = bookmarks.map { it.entryId }.toList()
+            val expectedDefinitions = DEFINITION_LIST
 
-        `when`(mockAppRepository.getBookmarks())
-            .thenReturn(Result.success(bookmarks))
-        `when`(mockJMdictRepository.getDictionaryEntries(bookmarkIds))
-            .thenReturn(Result.success(expectedDefinitions))
+            `when`(mockAppRepository.getBookmarks())
+                .thenReturn(Result.success(bookmarks))
+            `when`(mockJMdictRepository.getDictionaryEntries(bookmarkIds))
+                .thenReturn(Result.success(expectedDefinitions))
 
-        val definitions = fetchBookmarksUseCase(Unit).getOrNull()
+            val definitions = fetchBookmarksUseCase(Unit).getOrNull()
 
-        verify(mockAppRepository).getBookmarks()
-        verify(mockJMdictRepository).getDictionaryEntries(bookmarkIds)
+            verify(mockAppRepository).getBookmarks()
+            verify(mockJMdictRepository).getDictionaryEntries(bookmarkIds)
 
-        assertThat(definitions, `is`(equalTo(expectedDefinitions)))
-    }
+            assertThat(definitions, `is`(equalTo(expectedDefinitions)))
+        }
 
     companion object {
         private val SAMPLE_BOOKMARK = TestDataBuilder.Companion.buildBookmark()

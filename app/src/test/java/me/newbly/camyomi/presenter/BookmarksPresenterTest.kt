@@ -21,9 +21,12 @@ import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
 class BookmarksPresenterTest : BaseTest() {
-    @Mock private lateinit var view: BookmarksContract.View
-    @Mock private lateinit var fetchBookmarksUseCase: FetchBookmarksUseCase
-    @Mock private lateinit var removeBookmarkUseCase: RemoveBookmarkUseCase
+    @Mock
+    private lateinit var view: BookmarksContract.View
+    @Mock
+    private lateinit var fetchBookmarksUseCase: FetchBookmarksUseCase
+    @Mock
+    private lateinit var removeBookmarkUseCase: RemoveBookmarkUseCase
 
     private lateinit var presenter: BookmarksPresenter
 
@@ -39,19 +42,20 @@ class BookmarksPresenterTest : BaseTest() {
     }
 
     @Test
-    fun `given bookmarks exist when getting bookmarks expect list of bookmarks`(): Unit = runBlocking {
-        val expectedDefinitions = listOf(TestDataBuilder.buildDefinition())
+    fun `given bookmarks exist when getting bookmarks expect list of bookmarks`(): Unit =
+        runBlocking {
+            val expectedDefinitions = listOf(TestDataBuilder.buildDefinition())
 
-        doNothing().`when`(view).showBookmarkedDefinitions(any())
+            doNothing().`when`(view).showBookmarkedDefinitions(any())
 
-        doAnswer {
-            return@doAnswer Result.success(expectedDefinitions)
-        }.`when`(fetchBookmarksUseCase).invoke(Unit)
+            doAnswer {
+                return@doAnswer Result.success(expectedDefinitions)
+            }.`when`(fetchBookmarksUseCase).invoke(Unit)
 
-        presenter.getBookmarks()
+            presenter.getBookmarks()
 
-        verify(view).showBookmarkedDefinitions(expectedDefinitions)
-    }
+            verify(view).showBookmarkedDefinitions(expectedDefinitions)
+        }
 
     @Test
     fun `when bookmark button clicked expect successful bookmark removal`(): Unit = runBlocking {

@@ -18,8 +18,10 @@ import org.mockito.kotlin.verify
 
 @RunWith(MockitoJUnitRunner::class)
 class RecentlyScannedPresenterTest : BaseTest() {
-    @Mock private lateinit var view: RecentlyScannedContract.View
-    @Mock private lateinit var fetchRecentlyScannedUseCase: FetchRecentlyScannedUseCase
+    @Mock
+    private lateinit var view: RecentlyScannedContract.View
+    @Mock
+    private lateinit var fetchRecentlyScannedUseCase: FetchRecentlyScannedUseCase
 
     private lateinit var presenter: RecentlyScannedPresenter
 
@@ -34,28 +36,30 @@ class RecentlyScannedPresenterTest : BaseTest() {
     }
 
     @Test
-    fun `given recent scans exist when getting recent scans expect list of recent scans`(): Unit = runBlocking {
-        val expectedRecentScans = listOf(TestDataBuilder.buildRecentScan())
+    fun `given recent scans exist when getting recent scans expect list of recent scans`(): Unit =
+        runBlocking {
+            val expectedRecentScans = listOf(TestDataBuilder.buildRecentScan())
 
-        doNothing().`when`(view).showRecentScans(any())
+            doNothing().`when`(view).showRecentScans(any())
 
-        doAnswer {
-            return@doAnswer Result.success(expectedRecentScans)
-        }.`when`(fetchRecentlyScannedUseCase).invoke(Unit)
+            doAnswer {
+                return@doAnswer Result.success(expectedRecentScans)
+            }.`when`(fetchRecentlyScannedUseCase).invoke(Unit)
 
-        presenter.getRecentScans()
+            presenter.getRecentScans()
 
-        verify(view).showRecentScans(expectedRecentScans)
-    }
+            verify(view).showRecentScans(expectedRecentScans)
+        }
 
     @Test
-    fun `when recent scan entry clicked expect view to navigate to scanner fragment`(): Unit = runBlocking {
-        val recentScan = TestDataBuilder.buildRecentScan()
+    fun `when recent scan entry clicked expect view to navigate to scanner fragment`(): Unit =
+        runBlocking {
+            val recentScan = TestDataBuilder.buildRecentScan()
 
-        doNothing().`when`(view).navigateToScanner(any())
+            doNothing().`when`(view).navigateToScanner(any())
 
-        presenter.onRecentScanClicked(recentScan)
+            presenter.onRecentScanClicked(recentScan)
 
-        verify(view).navigateToScanner(recentScan.text)
-    }
+            verify(view).navigateToScanner(recentScan.text)
+        }
 }

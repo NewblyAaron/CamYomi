@@ -12,6 +12,6 @@ interface BookmarksContract {
 
     interface Presenter {
         suspend fun getBookmarks()
-        suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int) : Boolean
+        suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean
     }
 }

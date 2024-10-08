@@ -1,6 +1,5 @@
 package me.newbly.camyomi.usecase
 
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import me.newbly.camyomi.BaseTest
 import me.newbly.camyomi.TestDataBuilder
@@ -26,17 +25,18 @@ class FetchRecentlyScannedUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun `given recent scans exist when fetching recent scans expect list of recent scans`(): Unit = runBlocking {
-        val expectedRecentScans = RECENT_SCAN_LIST
+    fun `given recent scans exist when fetching recent scans expect list of recent scans`(): Unit =
+        runBlocking {
+            val expectedRecentScans = RECENT_SCAN_LIST
 
-        `when`(mockAppRepository.getRecentlyScanned())
-            .thenReturn(Result.success(expectedRecentScans))
+            `when`(mockAppRepository.getRecentlyScanned())
+                .thenReturn(Result.success(expectedRecentScans))
 
-        val recentScans = fetchRecentlyScannedUseCase(Unit).getOrNull()
+            val recentScans = fetchRecentlyScannedUseCase(Unit).getOrNull()
 
-        verify(mockAppRepository).getRecentlyScanned()
-        assertThat(recentScans, `is`(equalTo(expectedRecentScans)))
-    }
+            verify(mockAppRepository).getRecentlyScanned()
+            assertThat(recentScans, `is`(equalTo(expectedRecentScans)))
+        }
 
     companion object {
         private val SAMPLE_RECENT_SCAN = TestDataBuilder.Companion.buildRecentScan()

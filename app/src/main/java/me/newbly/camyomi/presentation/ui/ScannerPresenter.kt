@@ -1,7 +1,6 @@
 package me.newbly.camyomi.presentation.ui
 
 import android.graphics.Bitmap
-import android.util.Log
 import com.atilika.kuromoji.TokenizerBase
 import com.atilika.kuromoji.ipadic.Tokenizer
 import dagger.assisted.Assisted
@@ -35,6 +34,7 @@ class ScannerPresenter @AssistedInject constructor(
     override fun onImagePickerButtonClicked() = view.launchImagePicker()
     override suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean =
         saveNewBookmark(dictionaryEntryId)
+
     override suspend fun onImageCaptured(image: Bitmap) = processTextRecognition(image)
     override suspend fun onWordSelected(selectedText: String) = getDefinitionsFor(selectedText)
     override suspend fun loadPassedArgs(passedText: String) = processRecentScan(passedText)
@@ -100,10 +100,12 @@ class ScannerPresenter @AssistedInject constructor(
             val tokens = tokenizer.tokenize(text)
             val words = mutableListOf<Word>()
             tokens.forEach {
-                words.add(Word(
-                    originalForm = it.surface,
-                    baseForm = it.baseForm
-                ))
+                words.add(
+                    Word(
+                        originalForm = it.surface,
+                        baseForm = it.baseForm
+                    )
+                )
             }
 
             return@withContext words

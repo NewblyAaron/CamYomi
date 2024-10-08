@@ -11,7 +11,7 @@ import javax.inject.Inject
 class AppDbRepository @Inject constructor(
     private val recentScanDao: RecentScanDao,
     private val bookmarkDao: BookmarkDao
-): AppDbContract.Repository {
+) : AppDbContract.Repository {
     override suspend fun getRecentlyScanned(): Result<List<RecentScan>> {
         return try {
             val list = recentScanDao.getRecentlyScanned()

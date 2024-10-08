@@ -18,10 +18,13 @@ import javax.inject.Inject
 class SingletonTest : HiltBaseTest() {
     @Inject
     lateinit var jmdictDatabase1: JMdictDatabase
+
     @Inject
     lateinit var jmdictDatabase2: JMdictDatabase
+
     @Inject
     lateinit var appDatabase1: AppDatabase
+
     @Inject
     lateinit var appDatabase2: AppDatabase
 
@@ -33,10 +36,13 @@ class SingletonTest : HiltBaseTest() {
 
     @Inject
     lateinit var appRepository1: AppDbContract.Repository
+
     @Inject
     lateinit var appRepository2: AppDbContract.Repository
+
     @Inject
     lateinit var jmdictRepository1: JMdictContract.Repository
+
     @Inject
     lateinit var jmdictRepository2: JMdictContract.Repository
 
