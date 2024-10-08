@@ -1,9 +1,9 @@
 package me.newbly.camyomi.data.repository
 
 import android.graphics.Bitmap
-import android.util.Log
 import me.newbly.camyomi.data.local.mlkit.MLKitService
 import me.newbly.camyomi.presentation.contract.TextRecognitionContract
+import timber.log.Timber
 import javax.inject.Inject
 
 class TextRecognitionRepository @Inject constructor(
@@ -30,12 +30,10 @@ class TextRecognitionRepository @Inject constructor(
             }
             Result.success(formattedText)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
 
-    companion object {
-        private val TAG_NAME = TextRecognitionRepository::class.simpleName
-    }
+    private fun handleException(e: Exception) = Timber.e(e)
 }

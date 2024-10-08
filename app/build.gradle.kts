@@ -29,6 +29,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig = true
     }
     buildTypes {
         release {
@@ -80,6 +81,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.timber)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)

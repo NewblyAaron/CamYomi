@@ -29,6 +29,7 @@ coroutinesVersion = "1.9.0"
 mockkVersion = "1.13.12"
 mockitoVersion = "5.14.1"
 mockitoKotlinVersion = "5.4.0"
+timberVersion = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -81,6 +82,7 @@ kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "ko
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoVersion" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlinVersion" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timberVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

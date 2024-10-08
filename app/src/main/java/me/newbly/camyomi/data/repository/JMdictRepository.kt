@@ -1,9 +1,9 @@
 package me.newbly.camyomi.data.repository
 
-import android.util.Log
 import me.newbly.camyomi.data.local.jmdictdb.dao.DictionaryEntryDao
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.presentation.contract.JMdictContract
+import timber.log.Timber
 import javax.inject.Inject
 
 class JMdictRepository @Inject constructor(
@@ -17,13 +17,15 @@ class JMdictRepository @Inject constructor(
                 throw NoSuchElementException("No entries found.")
             }
 
-            Log.d(TAG_NAME, entries.joinToString(separator = "\n") {
-                it.toString()
-            })
+            Timber.d(
+                entries.joinToString(separator = "\n") {
+                    it.toString()
+                }
+            )
 
             Result.success(entries)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
@@ -37,12 +39,10 @@ class JMdictRepository @Inject constructor(
 
             Result.success(entries)
         } catch (e: Exception) {
-            Log.e(TAG_NAME, e.message, e)
+            handleException(e)
             Result.failure(e)
         }
     }
 
-    companion object {
-        private val TAG_NAME = JMdictRepository::class.simpleName
-    }
+    private fun handleException(e: Exception) = Timber.e(e)
 }
