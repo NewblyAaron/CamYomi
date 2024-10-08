@@ -21,6 +21,8 @@ variables:
   #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
   # when the script was last modified for latest compileSdkVersion, it was which is written down below
   ANDROID_SDK_TOOLS: "11076708"
+  # Set Gradle Home
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
 
 workflow:
   rules:
@@ -29,6 +31,11 @@ workflow:
 default:
   tags:
     - intern
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
 
 # Packages installation before running script
 before_script:
