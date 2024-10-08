@@ -22,6 +22,10 @@ variables:
   # when the script was last modified for latest compileSdkVersion, it was which is written down below
   ANDROID_SDK_TOOLS: "11076708"
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
 default:
   tags:
     - intern
