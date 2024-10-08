@@ -82,6 +82,7 @@ lintDebug:
 
 # Make Project
 assembleDebug:
+  needs: [lintDebug]
   interruptible: true
   stage: build
   script:
