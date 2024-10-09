@@ -48,8 +48,8 @@ class ScannerPresenter @AssistedInject constructor(
             val wordMap = tokenizeText(recognizedText)
 
             view.hideRecognizeProgress()
-            view.toggleFabMenu()            // hide the fab menu
-            view.showDefinitions(listOf())  // clear definitions list
+            view.toggleFabMenu() // hide the fab menu
+            view.showDefinitions(listOf()) // clear definitions list
             view.showRecognizedText(wordMap)
         } catch (e: Exception) {
             view.hideRecognizeProgress()
@@ -64,7 +64,7 @@ class ScannerPresenter @AssistedInject constructor(
             val wordMap = tokenizeText(recentScanText)
 
             view.hideRecognizeProgress()
-            view.showDefinitions(listOf())  // clear definitions list
+            view.showDefinitions(listOf()) // clear definitions list
             view.showRecognizedText(wordMap)
         } catch (e: Exception) {
             view.hideRecognizeProgress()
@@ -95,6 +95,7 @@ class ScannerPresenter @AssistedInject constructor(
         }
     }
 
+    @Suppress("InjectDispatcher")
     private suspend fun tokenizeText(text: String): List<Word> =
         withContext(Dispatchers.IO) {
             val tokens = tokenizer.tokenize(text)

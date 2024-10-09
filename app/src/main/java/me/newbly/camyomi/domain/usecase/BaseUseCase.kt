@@ -1,11 +1,14 @@
 package me.newbly.camyomi.domain.usecase
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-abstract class BaseUseCase<in Params, out Result> {
+abstract class BaseUseCase<in Params, out Result>(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) {
     suspend operator fun invoke(params: Params): Result =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             execute(params)
         }
 

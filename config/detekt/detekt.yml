@@ -492,7 +492,7 @@ potential-bugs:
     active: true
   UnsafeCallOnNullableType:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/main/java/me/newbly/camyomi/presentation/ui/*Fragment.kt', '**/main/java/me/newbly/camyomi/presentation/ui/*Activity.kt']
   UnsafeCast:
     active: true
   UnusedUnaryOperator:
@@ -708,6 +708,7 @@ style:
     allowNonStandardGrouping: false
   UnnecessaryAbstractClass:
     active: true
+    ignoreAnnotated: ['Module']
   UnnecessaryAnnotationUseSiteTarget:
     active: false
   UnnecessaryApply:

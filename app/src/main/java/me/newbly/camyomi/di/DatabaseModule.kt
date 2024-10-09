@@ -40,5 +40,4 @@ class DatabaseModule {
 
     @Provides
     fun provideBookmarkDao(appDb: AppDatabase): BookmarkDao = appDb.bookmarkDao()
-
 }
