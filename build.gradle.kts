@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.navigation.safeargs) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.detekt) apply false
 }
 
 buildscript {

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -105,4 +106,6 @@ dependencies {
     androidTestImplementation(libs.navigation.testing)
     kspAndroidTest(libs.hilt.compiler)
     kspAndroidTest(libs.room.compiler)
+
+    detektPlugins(libs.detekt.formatting)
 }
