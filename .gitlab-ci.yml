@@ -69,7 +69,22 @@ before_script:
 
 # Basic android and gradle stuff
 # Check linting
-lintDebug:
+detektDebug:
+  interruptible: true
+  stage: build
+  script:
+    - ./gradlew -Pci --console=plain :app:detektDebug -PbuildDir=lint
+  cache:
+    <<: *gradle-cache
+    policy: pull # should not push
+  artifacts:
+    paths:
+      - app/lint/reports/detekt/debug.html
+    expose_as: "detekt-report"
+    when: always
+
+androidLintDebug:
+  needs: [detektDebug]
   interruptible: true
   stage: build
   script:
@@ -83,16 +98,6 @@ lintDebug:
     expose_as: "lint-report"
     when: always
 
-# Make Project
-assembleDebug:
-  interruptible: true
-  stage: build
-  script:
-    - ./gradlew assembleDebug
-  artifacts:
-    paths:
-      - app/build/outputs/
-
 # Run all tests, if any fails, interrupt the pipeline (fail it)
 debugTests:
   needs: [lintDebug, assembleDebug]
@@ -102,4 +107,6 @@ debugTests:
     - ./gradlew -Pci --console=plain :app:testDebug
   cache:
     <<: *gradle-cache
-    policy: pull # should not push
+  artifacts:
+    reports:
+      junit: app/build/test-results/**/*.xml
