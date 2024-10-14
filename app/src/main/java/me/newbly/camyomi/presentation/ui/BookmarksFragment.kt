@@ -38,7 +38,8 @@ class BookmarksFragment : Fragment(), BookmarksContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBookmarksBinding.inflate(inflater, container, false)
@@ -108,5 +109,4 @@ class BookmarksFragment : Fragment(), BookmarksContract.View {
             }
         }
     }
-
 }

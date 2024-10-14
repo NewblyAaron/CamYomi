@@ -39,7 +39,8 @@ class RecentlyScannedFragment : Fragment(), RecentlyScannedContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecentlyScannedBinding.inflate(inflater, container, false)

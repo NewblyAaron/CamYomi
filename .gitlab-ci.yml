@@ -1,0 +1,65 @@
+default:
+  image: alvrme/alpine-android:android-34-jdk17
+  tags:
+    - intern
+  cache: &gradle-cache
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+variables:
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+
+before_script:
+  # Not necessary, but just for surity
+  - chmod +x ./gradlew
+
+# Check linting
+detektDebug:
+  interruptible: true
+  stage: build
+  script:
+    - ./gradlew -Pci --console=plain :app:detektDebug -PbuildDir=lint
+  cache:
+    <<: *gradle-cache
+    policy: pull # should not push
+  artifacts:
+    reports:
+      codequality: "app/lint/reports/detekt/gitlab.json"
+    paths:
+      - app/lint/reports/detekt/debug.html
+    expose_as: "detekt-report"
+    when: always
+
+androidLintDebug:
+  needs: [detektDebug]
+  interruptible: true
+  stage: build
+  script:
+    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+  cache:
+    <<: *gradle-cache
+    policy: pull # should not push
+  artifacts:
+    paths:
+      - app/lint/reports/lint-results-debug.html
+    expose_as: "lint-report"
+    when: always
+
+# Run all tests, if any fails, interrupt the pipeline (fail it)
+debugTests:
+  needs: [androidLintDebug, detektDebug]
+  interruptible: true
+  stage: test
+  script:
+    - ./gradlew -Pci --console=plain :app:testDebug
+  cache:
+    <<: *gradle-cache
+  artifacts:
+    reports:
+      junit: app/build/test-results/**/*.xml

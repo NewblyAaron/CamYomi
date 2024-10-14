@@ -29,12 +29,16 @@ import org.mockito.kotlin.withSettings
 class ScannerPresenterTest : BaseTest() {
     @Mock
     private lateinit var view: ScannerContract.View
+
     @Mock
     private lateinit var recognizeTextUseCase: RecognizeTextUseCase
+
     @Mock
     private lateinit var fetchDefinitionsUseCase: FetchDefinitionsUseCase
+
     @Mock
     private lateinit var saveToRecentlyScannedUseCase: SaveToRecentlyScannedUseCase
+
     @Mock
     private lateinit var addBookmarkUseCase: AddBookmarkUseCase
 

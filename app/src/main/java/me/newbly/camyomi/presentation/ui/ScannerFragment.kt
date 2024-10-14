@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +42,7 @@ import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.domain.entity.Word
 import me.newbly.camyomi.presentation.contract.ScannerContract
 import me.newbly.camyomi.presentation.ui.adapter.DefinitionAdapter
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,6 +55,8 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     private var _binding: FragmentScannerBinding? = null
     private val binding get() = _binding!!
 
+    // need to suppress as the camera launcher input type is explicitly java.lang.Void?
+    @Suppress("ForbiddenVoid")
     private lateinit var cameraLauncher: ActivityResultLauncher<Void?>
     private lateinit var pickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
@@ -112,7 +114,8 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentScannerBinding.inflate(inflater, container, false)
@@ -139,7 +142,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         try {
             pickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         } catch (e: Exception) {
-            Log.e("OCRScannerFragment", e.localizedMessage, e)
+            handleException(e)
         }
     }
 
@@ -151,7 +154,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         } catch (e: Exception) {
-            Log.e("OCRScannerFragment", e.localizedMessage, e)
+            handleException(e)
         }
     }
 
@@ -184,7 +187,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             }
 
             else -> {
-                throw IllegalStateException("that's not supposed to happen")
+                error("that's not supposed to happen! booleans can't be a \"maybe\"")
             }
         }
     }
@@ -262,6 +265,8 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         requireContext(),
         Manifest.permission.CAMERA,
     ) == PackageManager.PERMISSION_GRANTED
+
+    private fun handleException(e: Exception) = Timber.e(e)
 
     @OptIn(ExperimentalLayoutApi::class)
     @Preview

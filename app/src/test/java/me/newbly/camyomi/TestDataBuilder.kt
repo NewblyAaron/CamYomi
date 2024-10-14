@@ -47,6 +47,7 @@ class TestDataBuilder {
 
         private const val SAMPLE_SENTENCE = "今日は暑いですね"
 
+        @Suppress("MaxLineLength")
         private val SAMPLE_DEFINITION =
             DictionaryEntry(
                 id = 1579110,

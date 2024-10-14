@@ -40,8 +40,8 @@ data class DictionaryEntry(
     }
 
     fun getOtherReadings(): String {
-        val kanjiReadings = keb?.split(";") ?: listOf()
-        val kanaReadings = re?.split(";") ?: listOf()
+        val kanjiReadings = keb?.split(";").orEmpty()
+        val kanaReadings = re?.split(";").orEmpty()
 
         var formattedString = ""
 

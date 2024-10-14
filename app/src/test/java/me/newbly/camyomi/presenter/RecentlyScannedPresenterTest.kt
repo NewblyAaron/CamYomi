@@ -20,6 +20,7 @@ import org.mockito.kotlin.verify
 class RecentlyScannedPresenterTest : BaseTest() {
     @Mock
     private lateinit var view: RecentlyScannedContract.View
+
     @Mock
     private lateinit var fetchRecentlyScannedUseCase: FetchRecentlyScannedUseCase
 

@@ -23,8 +23,10 @@ import org.mockito.kotlin.verify
 class BookmarksPresenterTest : BaseTest() {
     @Mock
     private lateinit var view: BookmarksContract.View
+
     @Mock
     private lateinit var fetchBookmarksUseCase: FetchBookmarksUseCase
+
     @Mock
     private lateinit var removeBookmarkUseCase: RemoveBookmarkUseCase
 
