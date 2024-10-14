@@ -78,6 +78,8 @@ detektDebug:
     <<: *gradle-cache
     policy: pull # should not push
   artifacts:
+    reports:
+      codequality: "app/lint/reports/detekt/gitlab.json"
     paths:
       - app/lint/reports/detekt/debug.html
     expose_as: "detekt-report"
