@@ -31,6 +31,7 @@ mockitoVersion = "5.14.1"
 mockitoKotlinVersion = "5.4.0"
 timberVersion = "5.0.1"
 detektVersion = "1.23.3"
+detektGitlabReportVersion = "0.3.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -85,6 +86,7 @@ mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mo
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlinVersion" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timberVersion" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detektVersion" }
+detekt-gitlab-report = { group = "com.gitlab.cromefire", name = "detekt-gitlab-report", version.ref = "detektGitlabReportVersion"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

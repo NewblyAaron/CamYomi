@@ -108,4 +108,22 @@ dependencies {
     kspAndroidTest(libs.room.compiler)
 
     detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.gitlab.report)
+}
+
+detekt {
+    basePath = rootDir.toString()
+}
+
+tasks {
+    withType<io.gitlab.arturbosch.detekt.Detekt> {
+        reports {
+            custom {
+                reportId = "DetektGitlabReport"
+                // This tells detekt, where it should write the report to,
+                // you have to specify this file in the gitlab pipeline config.
+                outputLocation.set(file(layout.buildDirectory.file("reports/detekt/gitlab.json")))
+            }
+        }
+    }
 }
