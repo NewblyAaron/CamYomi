@@ -56,7 +56,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     private val binding get() = _binding!!
 
     // need to suppress as the camera launcher input type is explicitly java.lang.Void?
-    //@Suppress("ForbiddenVoid")
+    @Suppress("ForbiddenVoid")
     private lateinit var cameraLauncher: ActivityResultLauncher<Void?>
     private lateinit var pickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
