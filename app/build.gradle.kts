@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.app.distribution)
 }
 
 android {
@@ -83,6 +85,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.timber)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
