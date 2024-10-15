@@ -154,7 +154,7 @@ uploadRelease:
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
   variables:
-    REGEX_PATTERN: '^v([0-9]+\.[0-9+]+\.[0-9+]+)$'
+    REGEX_PATTERN: '^v?([0-9]+\.[0-9]+\.[0-9]+)$'
   script:
     # get only the version number (without the "v" in "v#.#.#")
     - if [[ $CI_COMMIT_TAG =~ $REGEX_PATTERN ]]; then export PACKAGE_VERSION=${BASH_REMATCH[1]}; fi
