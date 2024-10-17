@@ -10,6 +10,7 @@ default:
 
 workflow:
   rules:
+    - if: $CI_PIPELINE_SOURCE == 'web'
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_TAG
 
@@ -23,8 +24,6 @@ variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
 
 before_script:
-  # Install curl and jq
-  - apk add curl jq
   # Not necessary, but just for surity
   - chmod +x ./gradlew
 
@@ -32,8 +31,19 @@ before_script:
 detektDebug:
   interruptible: true
   stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - "app/**/*"
+          - "config/detekt/**/*"
+          - "gradle/**/*"
+          - "build.gradle.kts"
+          - "settings.gradle.kts"
+          - "gradle.properties"
+    - when: never
   script:
-    - ./gradlew -Pci --console=plain :app:detektDebug -PbuildDir=lint
+    - ./gradlew -Pci --console=plain detektDebug -PbuildDir=lint
   cache:
     <<: *gradle-cache
     policy: pull # should not push
@@ -46,11 +56,21 @@ detektDebug:
     when: always
 
 androidLintDebug:
-  needs: [detektDebug]
   interruptible: true
   stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - "app/**/*"
+          - "config/detekt/**/*"
+          - "gradle/**/*"
+          - "build.gradle.kts"
+          - "settings.gradle.kts"
+          - "gradle.properties"
+    - when: never
   script:
-    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    - ./gradlew -Pci --console=plain lintDebug -PbuildDir=lint
   cache:
     <<: *gradle-cache
     policy: pull # should not push
@@ -61,11 +81,10 @@ androidLintDebug:
     when: always
 
 assembleDebug:
-  needs: [androidLintDebug, detektDebug]
   interruptible: true
   stage: build
   script:
-    - ./gradlew -Pci --console=plain :app:assembleDebug
+    - ./gradlew -Pci --console=plain assembleDebug
   cache:
     <<: *gradle-cache
   artifacts:
@@ -78,7 +97,7 @@ debugTests:
   interruptible: true
   stage: test
   script:
-    - ./gradlew -Pci --console=plain :app:testDebug
+    - ./gradlew -Pci --console=plain testDebug
   cache:
     <<: *gradle-cache
     policy: pull # should not push
@@ -86,94 +105,99 @@ debugTests:
     reports:
       junit: app/build/test-results/**/*.xml
 
-# Create a changelog file
-prepareChangelog:
-  interruptible: true
-  stage: prepare
-  image: alpine:latest
-  rules:
-    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
-  script:
-    - 'curl -H "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/changelog?version=$CI_COMMIT_TAG" | jq -r .notes > release_notes.md'
-  cache: {}
-  artifacts:
-    paths:
-      - release_notes.md
-
 # Build the release application
 assembleRelease:
   interruptible: true
   stage: prepare
   rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
+    - if: $CI_PIPELINE_SOURCE == 'web'
+      when: manual
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
   variables:
-    SECURE_FILES_DOWNLOAD_PATH: "$CI_PROJECT_DIR/.secrets"
-    KEYSTORE_FILE: "${SECURE_FILES_DOWNLOAD_PATH}/android_keystore.jks"
-  script:
+    SECURE_FILES_DOWNLOAD_PATH: "./secrets"
+  before_script:
     # Download the secret files for deployment to Firebase App Distribution
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ./gradlew -Pci --console=plain :app:assembleRelease
-      -Pandroid.injected.signing.store.file=$KEYSTORE_FILE
-      -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD
-      -Pandroid.injected.signing.key.alias=$KEY_ALIAS
-      -Pandroid.injected.signing.store.password=$KEY_PASSWORD
+    - ls -la $(pwd)
+    - ls -la $(pwd)/secrets
+    - export KEYSTORE_FILE=$(pwd)/secrets/android_keystore.jks
+    - 'echo "Keystore file path: $KEYSTORE_FILE"'
+    - ls -l $KEYSTORE_FILE
+    - chmod 644 $KEYSTORE_FILE
+  script:
+    - './gradlew -Pci --console=plain assembleRelease -Pandroid.injected.signing.store.file=$KEYSTORE_FILE -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD'
   cache:
     <<: *gradle-cache
   artifacts:
     paths:
       - app/build/outputs/apk/release
 
+# Create a changelog file
+prepareChangelog:
+  needs: [assembleRelease]
+  interruptible: true
+  stage: prepare
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
+  image: alpine:latest
+  script:
+    - 'echo "Commit tag: $CI_COMMIT_TAG"'
+    - 'curl -H "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/changelog?version=$CI_COMMIT_TAG" | jq -r .notes > release_notes.md'
+    - cat release_notes.md
+  cache: {}
+  artifacts:
+    paths:
+      - release_notes.md
+
 # Deploy to Firebase App Distribution
 deployFirebaseAppDist:
-  needs:
-    - job: assembleRelease
-      artifacts: true
-    - job: prepareChangelog
-      artifacts: true
   interruptible: true
   stage: deploy
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
+      needs: [prepareChangelog]
   variables:
-    SECURE_FILES_DOWNLOAD_PATH: "$CI_PROJECT_DIR/.secrets"
-    GOOGLE_APPLICATION_CREDENTIALS: "$SECURE_FILES_DOWNLOAD_PATH/camyomi-c7fe7-9d3694bc6be0.json"
-  script:
+    SECURE_FILES_DOWNLOAD_PATH: "${CI_PROJECT_DIR}/secrets"
+    GOOGLE_APPLICATION_CREDENTIALS: "${SECURE_FILES_DOWNLOAD_PATH}/camyomi-c7fe7-9d3694bc6be0.json"
+  before_script:
     # Download the secret files for deployment to Firebase App Distribution
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ./gradlew -Pci --console=plain :app:appDistributionUploadRelease
+    - 'echo "Credentials file path: $GOOGLE_APPLICATION_CREDENTIALS"'
+  script:
+    - ./gradlew -Pci --console=plain appDistributionUploadRelease
       --releaseNotesFile="./release_notes.md"
   cache: {}
 
 # Create release in GitLab repository
 uploadRelease:
-  needs:
-    - job: assembleRelease
-      artifacts: true
+  interruptible: true
   stage: deploy
   image: alpine:latest
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
-  variables:
-    REGEX_PATTERN: '^v?([0-9]+\.[0-9]+\.[0-9]+)$'
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
+      needs: [prepareChangelog]
+  #variables:
+  #  REGEX_PATTERN: '^v?([0-9]+\.[0-9]+\.[0-9]+)$'
   script:
     # get only the version number (without the "v" in "v#.#.#")
-    - if [[ $CI_COMMIT_TAG =~ $REGEX_PATTERN ]]; then export PACKAGE_VERSION=${BASH_REMATCH[1]}; fi
-    - 'echo "Version: $PACKAGE_VERSION"'
+    #- 'echo "Regex Pattern: $REGEX_PATTERN"'
+    #- 'if [[ $CI_COMMIT_TAG =~ $REGEX_PATTERN ]]; then PACKAGE_VERSION=${BASH_REMATCH[1]}; fi'
+    - 'echo "Version: $CI_COMMIT_TAG"'
     - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file app/build/outputs/apk/release/apk-release.apk "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${PACKAGE_VERSION}/apk-release.apk"'
   cache: {}
 
 deployGitlabRelease:
-  needs:
-    - job: uploadRelease
-    - job: prepareChangelog
-      artifacts: true
   interruptible: true
   stage: deploy
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
+      needs: [uploadRelease]
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
-    - echo "Creating release"
+    #- 'if [[ $CI_COMMIT_TAG =~ $REGEX_PATTERN ]]; then PACKAGE_VERSION=${BASH_REMATCH[1]}; fi'
+    - 'echo "Creating release $CI_COMMIT_TAG"'
   release:
     name: "Release $CI_COMMIT_TAG"
     description: release_notes.md
