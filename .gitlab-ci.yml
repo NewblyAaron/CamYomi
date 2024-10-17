@@ -34,7 +34,8 @@ detektDebug:
   interruptible: true
   stage: build
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         paths:
           - "app/**/*"
@@ -61,7 +62,8 @@ androidLintDebug:
   interruptible: true
   stage: build
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         paths:
           - "app/**/*"
@@ -85,6 +87,10 @@ androidLintDebug:
 assembleDebug:
   interruptible: true
   stage: build
+  rules:
+    - if: $CI_COMMIT_TAG
+      needs: [detektDebug, androidLintDebug]
+    - when: on_success
   script:
     - ./gradlew -Pci --console=plain assembleDebug
   cache:
