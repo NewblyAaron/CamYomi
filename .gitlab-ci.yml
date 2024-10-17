@@ -140,7 +140,6 @@ assembleRelease:
 
 # Create a changelog file
 prepareChangelog:
-  needs: [assembleRelease]
   interruptible: true
   stage: prepare
   rules:
