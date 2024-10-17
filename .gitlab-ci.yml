@@ -10,9 +10,11 @@ default:
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'web'
+    - if: $CI_MERGE_REQUEST_TITLE =~ /^Draft:/
+      when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_TAG
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
+    - if: $CI_PIPELINE_SOURCE == 'web'
 
 stages:
   - build
@@ -32,7 +34,7 @@ detektDebug:
   interruptible: true
   stage: build
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_TAG
       changes:
         paths:
           - "app/**/*"
@@ -59,7 +61,7 @@ androidLintDebug:
   interruptible: true
   stage: build
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_TAG
       changes:
         paths:
           - "app/**/*"
@@ -114,7 +116,7 @@ assembleRelease:
       when: never
     - if: $CI_PIPELINE_SOURCE == 'web'
       when: manual
-    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/' # only run when commited tag follows semantic versioning
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
   variables:
     SECURE_FILES_DOWNLOAD_PATH: "./secrets"
   before_script:
