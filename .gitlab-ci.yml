@@ -120,11 +120,7 @@ assembleRelease:
   before_script:
     # Download the secret files for deployment to Firebase App Distribution
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ls -la $(pwd)
-    - ls -la $(pwd)/secrets
     - export KEYSTORE_FILE=$(pwd)/secrets/android_keystore.jks
-    - 'echo "Keystore file path: $KEYSTORE_FILE"'
-    - ls -l $KEYSTORE_FILE
     - chmod 644 $KEYSTORE_FILE
   script:
     - './gradlew -Pci --console=plain assembleRelease -Pandroid.injected.signing.store.file=$KEYSTORE_FILE -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD'
@@ -159,12 +155,12 @@ deployFirebaseAppDist:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
       needs: [prepareChangelog]
   variables:
-    SECURE_FILES_DOWNLOAD_PATH: "${CI_PROJECT_DIR}/secrets"
-    GOOGLE_APPLICATION_CREDENTIALS: "${SECURE_FILES_DOWNLOAD_PATH}/camyomi-c7fe7-9d3694bc6be0.json"
+    SECURE_FILES_DOWNLOAD_PATH: "./secrets"
   before_script:
-    # Download the secret files for deployment to Firebase App Distribution
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - 'echo "Credentials file path: $GOOGLE_APPLICATION_CREDENTIALS"'
+      # Download the secret files for deployment to Firebase App Distribution
+      - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+      - export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/secrets/camyomi-c7fe7-9d3694bc6be0.json
+      - chmod 644 $GOOGLE_APPLICATION_CREDENTIALS
   script:
     - ./gradlew -Pci --console=plain appDistributionUploadRelease
       --releaseNotesFile="./release_notes.md"
