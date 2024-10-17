@@ -184,14 +184,11 @@ uploadRelease:
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
       needs: [prepareChangelog]
-  #variables:
-  #  REGEX_PATTERN: '^v?([0-9]+\.[0-9]+\.[0-9]+)$'
+  before_script:
+    - apk add curl
   script:
-    # get only the version number (without the "v" in "v#.#.#")
-    #- 'echo "Regex Pattern: $REGEX_PATTERN"'
-    #- 'if [[ $CI_COMMIT_TAG =~ $REGEX_PATTERN ]]; then PACKAGE_VERSION=${BASH_REMATCH[1]}; fi'
     - 'echo "Version: $CI_COMMIT_TAG"'
-    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file app/build/outputs/apk/release/apk-release.apk "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${PACKAGE_VERSION}/apk-release.apk"'
+    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file app/build/outputs/apk/release/apk-release.apk "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${CI_COMMIT_TAG}/apk-release.apk"'
   cache: {}
 
 deployGitlabRelease:
@@ -202,7 +199,6 @@ deployGitlabRelease:
       needs: [uploadRelease]
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
-    #- 'if [[ $CI_COMMIT_TAG =~ $REGEX_PATTERN ]]; then PACKAGE_VERSION=${BASH_REMATCH[1]}; fi'
     - 'echo "Creating release $CI_COMMIT_TAG"'
   release:
     name: "Release $CI_COMMIT_TAG"
@@ -212,5 +208,5 @@ deployGitlabRelease:
     assets:
       links:
         - name: "CamYomi $CI_COMMIT_TAG"
-          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${PACKAGE_VERSION}/apk-release.apk"
+          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${CI_COMMIT_TAG}/apk-release.apk"
   cache: {}
