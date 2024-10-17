@@ -187,7 +187,7 @@ uploadRelease:
     - apk add curl
   script:
     - 'echo "Version: $CI_COMMIT_TAG"'
-    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file ./app/build/outputs/apk/release/apk-release.apk "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${CI_COMMIT_TAG}/apk-release.apk"'
+    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$(pwd)/app/build/outputs/apk/release/app-release.apk" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${CI_COMMIT_TAG}/apk-release.apk"'
   cache: {}
 
 deployGitlabRelease:
