@@ -162,7 +162,7 @@ deployFirebaseAppDist:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
-      needs: [prepareChangelog]
+      needs: [assembleRelease, prepareChangelog]
   variables:
     SECURE_FILES_DOWNLOAD_PATH: "./secrets"
   before_script:
@@ -182,7 +182,7 @@ uploadRelease:
   image: alpine:latest
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
-      needs: [prepareChangelog]
+      needs: [assembleRelease, prepareChangelog]
   before_script:
     - apk add curl
   script:
