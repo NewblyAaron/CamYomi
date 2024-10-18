@@ -88,7 +88,7 @@ assembleDebug:
   interruptible: true
   stage: build
   rules:
-    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "merge_request_event"
       needs: [detektDebug, androidLintDebug]
     - when: on_success
   script:
