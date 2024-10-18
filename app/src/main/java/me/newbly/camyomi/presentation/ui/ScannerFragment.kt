@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -26,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -269,13 +271,13 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     private fun handleException(e: Exception) = Timber.e(e)
 
     @OptIn(ExperimentalLayoutApi::class)
-    @Preview
     @Composable
     private fun RecognizedJapaneseText(
         words: List<Word> = recognizedWords,
     ) {
         val selectedText: MutableState<String> = rememberSaveable { mutableStateOf("") }
-        val color = if (isSystemInDarkTheme()) Color.White else Color.Black
+        val textColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+        val fontSize = 32.sp
 
         MaterialTheme {
             FlowRow(
@@ -283,25 +285,24 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                     .fillMaxWidth()
             ) {
                 if (words.isEmpty()) {
-                    Text("Recognized text will display here", color = color, fontSize = 20.sp)
+                    Text(
+                        "Recognized text will display here",
+                        color = textColor,
+                        fontSize = 24.sp,
+                        textAlign = TextAlign.Center
+                    )
                 } else {
                     for (word in words) {
-                        val style = if (word.originalForm == selectedText.value) {
-                            MaterialTheme.typography.bodyLarge.copy(
-                                color = color,
-                                fontSize = 20.sp,
-                                background = Color.Red,
-                            )
-                        } else {
-                            MaterialTheme.typography.bodyLarge.copy(
-                                fontSize = 20.sp,
-                                color = color
-                            )
-                        }
-
                         Text(
                             word.originalForm,
-                            style = style,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = if (selectedText.value == word.originalForm) {
+                                    Color.White
+                                } else {
+                                    textColor
+                                },
+                                fontSize = fontSize,
+                            ),
                             modifier = Modifier
                                 .clickable {
                                     selectedText.value = word.originalForm
@@ -310,10 +311,30 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                                         presenter.onWordSelected(word.baseForm)
                                     }
                                 }
+                                .background(
+                                    color = if (selectedText.value == word.originalForm) {
+                                        Color.Red
+                                    } else {
+                                        Color.Transparent
+                                    }
+                                )
                         )
                     }
                 }
             }
         }
+    }
+
+    @Preview
+    @Composable
+    @Suppress("UnusedPrivateMember")
+    private fun ComposeViewPreview() {
+        RecognizedJapaneseText(
+            words = listOf(
+                Word("今日", "今日"),
+                Word("行こう", "行く"),
+                Word("かな", "かな"),
+            )
+        )
     }
 }
