@@ -173,6 +173,7 @@ deployFirebaseAppDist:
   script:
     - ./gradlew -Pci --console=plain appDistributionUploadRelease
       --releaseNotesFile="./release_notes.md"
+      --groups="myself, friends, nueca-android-team"
   cache: {}
 
 # Create release in GitLab repository
