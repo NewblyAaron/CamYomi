@@ -84,31 +84,14 @@ androidLintDebug:
     expose_as: "lint-report"
     when: always
 
-assembleDebug:
-  interruptible: true
-  stage: build
-  rules:
-    - if: $CI_COMMIT_TAG || $CI_PIPELINE_SOURCE == "merge_request_event"
-      needs: [detektDebug, androidLintDebug]
-    - when: on_success
-  script:
-    - ./gradlew -Pci --console=plain assembleDebug
-  cache:
-    <<: *gradle-cache
-  artifacts:
-    paths:
-      - app/build/outputs/apk/debug
-
 # Run all tests, if any fails, interrupt the pipeline (fail it)
 debugTests:
-  needs: [assembleDebug]
   interruptible: true
   stage: test
   script:
     - ./gradlew -Pci --console=plain testDebug
   cache:
     <<: *gradle-cache
-    policy: pull # should not push
   artifacts:
     reports:
       junit: app/build/test-results/**/*.xml
