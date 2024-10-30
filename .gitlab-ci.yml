@@ -19,8 +19,8 @@ workflow:
 stages:
   - build
   - test
-  - prepare
-  - deploy
+  - pre-release
+  - release
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
@@ -99,7 +99,7 @@ debugTests:
 # Build the release application
 assembleRelease:
   interruptible: true
-  stage: prepare
+  stage: pre-release
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: never
@@ -124,7 +124,7 @@ assembleRelease:
 # Create a changelog file
 prepareChangelog:
   interruptible: true
-  stage: prepare
+  stage: pre-release
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
   image: alpine:latest
@@ -139,10 +139,25 @@ prepareChangelog:
     paths:
       - release_notes.md
 
+# Upload signed APK to the repo's package registry
+uploadRelease:
+  interruptible: true
+  stage: pre-release
+  image: alpine:latest
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
+      needs: [assembleRelease]
+  before_script:
+    - apk add curl
+  script:
+    - 'echo "Version: $CI_COMMIT_TAG"'
+    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$(pwd)/app/build/outputs/apk/release/app-release.apk" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${CI_COMMIT_TAG}/apk-release.apk"'
+  cache: {}
+
 # Deploy to Firebase App Distribution
 deployFirebaseAppDist:
   interruptible: true
-  stage: deploy
+  stage: release
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
       needs: [assembleRelease, prepareChangelog]
@@ -159,27 +174,13 @@ deployFirebaseAppDist:
       --groups="myself, friends, nueca-android-team"
   cache: {}
 
-# Create release in GitLab repository
-uploadRelease:
-  interruptible: true
-  stage: deploy
-  image: alpine:latest
-  rules:
-    - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
-      needs: [assembleRelease, prepareChangelog]
-  before_script:
-    - apk add curl
-  script:
-    - 'echo "Version: $CI_COMMIT_TAG"'
-    - 'curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$(pwd)/app/build/outputs/apk/release/app-release.apk" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/camyomi/${CI_COMMIT_TAG}/apk-release.apk"'
-  cache: {}
-
+# Deploy to GitLab Release
 deployGitlabRelease:
   interruptible: true
-  stage: deploy
+  stage: release
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v?\d+\.\d+\.\d+$/'
-      needs: [uploadRelease]
+      needs: [uploadRelease, prepareChangelog]
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
     - 'echo "Creating release $CI_COMMIT_TAG"'
