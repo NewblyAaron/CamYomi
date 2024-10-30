@@ -32,6 +32,9 @@ mockitoKotlinVersion = "5.4.0"
 timberVersion = "5.0.1"
 detektVersion = "1.23.3"
 detektGitlabReportVersion = "0.3.3"
+googleServicesVersion = "4.4.2"
+firebaseBomVersion = "33.4.0"
+firebaseAppDistVersion = "5.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -87,6 +90,8 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timberVersion" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detektVersion" }
 detekt-gitlab-report = { group = "com.gitlab.cromefire", name = "detekt-gitlab-report", version.ref = "detektGitlabReportVersion"}
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBomVersion" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -97,3 +102,5 @@ navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", versi
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektVersion" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServicesVersion" }
+firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppDistVersion" }

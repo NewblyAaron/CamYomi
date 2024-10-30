@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.app.distribution)
 }
 
 android {
@@ -16,8 +18,8 @@ android {
         applicationId = "me.newbly.camyomi"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         // default value: androidx.test.runner.AndroidJUnitRunner
         testInstrumentationRunner = "me.newbly.camyomi.CustomTestRunner"
@@ -39,6 +41,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            firebaseAppDistribution {
+                artifactType = "APK"
+            }
         }
     }
     compileOptions {
@@ -83,6 +89,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.timber)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
