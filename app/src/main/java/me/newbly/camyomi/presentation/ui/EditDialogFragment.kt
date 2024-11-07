@@ -7,7 +7,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import me.newbly.camyomi.databinding.EditAlertDialogBinding
 
-class EditDialogFragment : DialogFragment() {
+class EditDialogFragment(
+    private val oldText: String
+) : DialogFragment() {
     private var onDialogPositiveButtonClickListener: ((String) -> Unit)? = null
 
     private var _binding: EditAlertDialogBinding? = null
@@ -18,6 +20,8 @@ class EditDialogFragment : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
             _binding = EditAlertDialogBinding.inflate(inflater)
+
+            binding.editText.setText(oldText)
 
             builder.setView(binding.root)
                 .setPositiveButton("Edit",
