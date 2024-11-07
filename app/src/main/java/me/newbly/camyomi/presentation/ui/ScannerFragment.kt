@@ -202,12 +202,13 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     }
 
     override fun showEditDialog() {
-        val currentText = recognizedWords.joinToString(separator = "") {
+        val bundle = Bundle()
+        bundle.putString("oldText", recognizedWords.joinToString(separator = "") {
             it.originalForm
-        }
-        val dialog = EditDialogFragment(
-            oldText = currentText
-        )
+        })
+
+        val dialog = EditDialogFragment()
+        dialog.arguments = bundle
         dialog.setOnDialogPositiveButtonClickListener {
             lifecycleScope.launch {
                 presenter.loadPassedArgs(it)
