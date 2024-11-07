@@ -16,7 +16,7 @@ class EditDialogFragment(
     private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
+        return requireActivity().let {
             val builder = AlertDialog.Builder(it)
             val inflater = requireActivity().layoutInflater
             _binding = EditAlertDialogBinding.inflate(inflater)
@@ -24,17 +24,21 @@ class EditDialogFragment(
             binding.editText.setText(oldText)
 
             builder.setView(binding.root)
-                .setPositiveButton("Edit",
+                .setPositiveButton(
+                    "Edit",
                     DialogInterface.OnClickListener { dialog, id ->
                         onDialogPositiveButtonClickListener?.invoke(binding.editText.text.toString())
                         dialog.dismiss()
-                })
-                .setNegativeButton("Cancel",
+                    }
+                )
+                .setNegativeButton(
+                    "Cancel",
                     DialogInterface.OnClickListener { dialog, id ->
                         dialog.cancel()
-                })
+                    }
+                )
             builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
+        }
     }
 
     fun setOnDialogPositiveButtonClickListener(l: (String) -> Unit) {
