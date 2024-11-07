@@ -14,6 +14,7 @@ interface ScannerContract {
         fun hideDefinitionsProgress()
         fun toggleFabMenu()
         fun showRecognizedText(words: List<Word>)
+        fun showEditDialog()
         fun showDefinitions(entries: List<DictionaryEntry>)
         fun showError(errorMessage: String)
     }
@@ -22,6 +23,7 @@ interface ScannerContract {
         fun onScanFabClicked()
         fun onCameraButtonClicked()
         fun onImagePickerButtonClicked()
+        fun onEditButtonClicked()
         suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean
         suspend fun onImageCaptured(image: Bitmap)
         suspend fun onWordSelected(selectedText: String)
