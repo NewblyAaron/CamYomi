@@ -32,9 +32,9 @@ class ScannerPresenter @AssistedInject constructor(
     override fun onScanFabClicked() = view.toggleFabMenu()
     override fun onCameraButtonClicked() = view.launchCamera()
     override fun onImagePickerButtonClicked() = view.launchImagePicker()
+    override fun onEditButtonClicked() = view.showEditDialog()
     override suspend fun onBookmarkButtonClicked(dictionaryEntryId: Int): Boolean =
         saveNewBookmark(dictionaryEntryId)
-
     override suspend fun onImageCaptured(image: Bitmap) = processTextRecognition(image)
     override suspend fun onWordSelected(selectedText: String) = getDefinitionsFor(selectedText)
     override suspend fun loadPassedArgs(passedText: String) = processRecentScan(passedText)

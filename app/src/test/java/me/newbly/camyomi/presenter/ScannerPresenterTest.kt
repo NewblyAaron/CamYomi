@@ -88,6 +88,16 @@ class ScannerPresenterTest : BaseTest() {
     }
 
     @Test
+    fun `when edit button clicked expect view show dialog`(): Unit = runBlocking {
+        doNothing()
+            .`when`(view).showEditDialog()
+
+        presenter.onEditButtonClicked()
+
+        verify(view).showEditDialog()
+    }
+
+    @Test
     fun `when bookmark button clicked expect successful adding of bookmark`(): Unit = runBlocking {
         val id = 1
 

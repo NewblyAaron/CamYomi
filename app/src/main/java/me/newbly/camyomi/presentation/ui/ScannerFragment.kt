@@ -201,6 +201,26 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         }
     }
 
+    override fun showEditDialog() {
+        val bundle = Bundle()
+        bundle.putString(
+            "oldText",
+            recognizedWords.joinToString(separator = "") {
+                it.originalForm
+            }
+        )
+
+        val dialog = EditDialogFragment()
+        dialog.arguments = bundle
+        dialog.setOnDialogPositiveButtonClickListener {
+            lifecycleScope.launch {
+                presenter.loadPassedArgs(it)
+            }
+        }
+
+        dialog.show(parentFragmentManager, "EDIT_DIALOG")
+    }
+
     override fun showDefinitions(entries: List<DictionaryEntry>) {
         definitionAdapter.submitList(entries)
     }
@@ -245,6 +265,7 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         scanFab.setOnClickListener { presenter.onScanFabClicked() }
         launchCameraButton.setOnClickListener { presenter.onCameraButtonClicked() }
         launchPickerButton.setOnClickListener { presenter.onImagePickerButtonClicked() }
+        editButton.setOnClickListener { presenter.onEditButtonClicked() }
     }
 
     private fun FragmentScannerBinding.hideFabMenu() {
