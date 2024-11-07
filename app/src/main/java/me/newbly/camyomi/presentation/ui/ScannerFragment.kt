@@ -203,9 +203,12 @@ class ScannerFragment : Fragment(), ScannerContract.View {
 
     override fun showEditDialog() {
         val bundle = Bundle()
-        bundle.putString("oldText", recognizedWords.joinToString(separator = "") {
-            it.originalForm
-        })
+        bundle.putString(
+            "oldText",
+            recognizedWords.joinToString(separator = "") {
+                it.originalForm
+            }
+        )
 
         val dialog = EditDialogFragment()
         dialog.arguments = bundle

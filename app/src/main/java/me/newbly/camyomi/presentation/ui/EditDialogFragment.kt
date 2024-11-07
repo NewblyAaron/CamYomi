@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import me.newbly.camyomi.databinding.EditAlertDialogBinding
 
-class EditDialogFragment() : DialogFragment() {
+class EditDialogFragment : DialogFragment() {
     private var onDialogPositiveButtonClickListener: ((String) -> Unit)? = null
 
     private var _binding: EditAlertDialogBinding? = null
