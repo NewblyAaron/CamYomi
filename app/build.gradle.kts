@@ -18,8 +18,8 @@ android {
         applicationId = "me.newbly.camyomi"
         minSdk = 28
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         // default value: androidx.test.runner.AndroidJUnitRunner
         testInstrumentationRunner = "me.newbly.camyomi.CustomTestRunner"
