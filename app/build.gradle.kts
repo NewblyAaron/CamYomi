@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.timber)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
