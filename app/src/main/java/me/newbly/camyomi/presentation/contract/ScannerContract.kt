@@ -15,7 +15,7 @@ interface ScannerContract {
         fun toggleFabMenu()
         fun showRecognizedText(words: List<Word>)
         fun showEditDialog()
-        fun showDefinitions(entries: List<DictionaryEntry>)
+        fun showDefinitions(entries: List<DictionaryEntry>, word: String? = null)
         fun showError(errorMessage: String)
     }
 
