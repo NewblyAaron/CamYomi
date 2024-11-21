@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.app.distribution)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -90,6 +91,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.timber)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
