@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -218,10 +219,15 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             RecognizedJapaneseText(recognizedWords)
         }
 
+        val sentence: String = buildString {
+            words.fastForEach { append(it.originalForm) }
+        }
+
+        Timber.d(sentence)
         analytics.logEvent(FirebaseAnalytics.Event.SEARCH) {
             param(
                 FirebaseAnalytics.Param.SEARCH_TERM,
-                words.joinToString(separator = ""),
+                sentence,
             )
         }
     }
@@ -286,10 +292,8 @@ class ScannerFragment : Fragment(), ScannerContract.View {
                 it.isBookmarked = presenter.onBookmarkButtonClicked(it.id)
                 definitionAdapter.notifyItemChanged(definitionAdapter.currentList.indexOf(it))
 
-                analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
-                    param(FirebaseAnalytics.Param.ITEM_ID, it.id.toLong())
+                analytics.logEvent("bookmark_definition") {
                     param(FirebaseAnalytics.Param.ITEM_NAME, "${it.getMainKanjiReading()} (${it.getMainKanaReading()})")
-                    param(FirebaseAnalytics.Param.CONTENT_TYPE, "Button")
                 }
             }
         }
@@ -376,15 +380,6 @@ class ScannerFragment : Fragment(), ScannerContract.View {
 
                                     lifecycleScope.launch {
                                         presenter.onWordSelected(word.baseForm)
-                                    }
-
-                                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
-                                        param(FirebaseAnalytics.Param.ITEM_ID, R.id.compose_view.toLong())
-                                        param(
-                                            FirebaseAnalytics.Param.ITEM_NAME,
-                                            "Recognized Text: ${selectedText.value}"
-                                        )
-                                        param(FirebaseAnalytics.Param.CONTENT_TYPE, "Text")
                                     }
                                 }
                                 .background(
