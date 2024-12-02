@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -37,8 +38,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import me.newbly.camyomi.R
 import me.newbly.camyomi.databinding.FragmentScannerBinding
 import me.newbly.camyomi.domain.entity.DictionaryEntry
 import me.newbly.camyomi.domain.entity.Word
@@ -52,6 +56,9 @@ class ScannerFragment : Fragment(), ScannerContract.View {
 
     @Inject
     lateinit var presenterFactory: ScannerPresenter.Factory
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
     private lateinit var presenter: ScannerContract.Presenter
 
     private var _binding: FragmentScannerBinding? = null
@@ -143,6 +150,12 @@ class ScannerFragment : Fragment(), ScannerContract.View {
     override fun launchImagePicker() {
         try {
             pickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+
+            analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                param(FirebaseAnalytics.Param.ITEM_ID, R.id.launch_picker_button.toLong())
+                param(FirebaseAnalytics.Param.ITEM_NAME, "Launch Image Picker")
+                param(FirebaseAnalytics.Param.CONTENT_TYPE, "Button")
+            }
         } catch (e: Exception) {
             handleException(e)
         }
@@ -152,6 +165,12 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         try {
             if (hasCameraPermission()) {
                 cameraLauncher.launch(null)
+
+                analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+                    param(FirebaseAnalytics.Param.ITEM_ID, R.id.launch_camera_button.toLong())
+                    param(FirebaseAnalytics.Param.ITEM_NAME, "Launch Camera")
+                    param(FirebaseAnalytics.Param.CONTENT_TYPE, "Button")
+                }
             } else {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
@@ -199,6 +218,18 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         binding.composeView.setContent {
             RecognizedJapaneseText(recognizedWords)
         }
+
+        val sentence: String = buildString {
+            words.fastForEach { append(it.originalForm) }
+        }
+
+        Timber.d(sentence)
+        analytics.logEvent(FirebaseAnalytics.Event.SEARCH) {
+            param(
+                FirebaseAnalytics.Param.SEARCH_TERM,
+                sentence,
+            )
+        }
     }
 
     override fun showEditDialog() {
@@ -219,10 +250,25 @@ class ScannerFragment : Fragment(), ScannerContract.View {
         }
 
         dialog.show(parentFragmentManager, "EDIT_DIALOG")
+
+        analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, R.id.edit_button.toLong())
+            param(FirebaseAnalytics.Param.ITEM_NAME, "Edit Text Button")
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "Button")
+        }
     }
 
-    override fun showDefinitions(entries: List<DictionaryEntry>) {
+    override fun showDefinitions(entries: List<DictionaryEntry>, word: String?) {
         definitionAdapter.submitList(entries)
+
+        if (!word.isNullOrBlank()) {
+            analytics.logEvent(FirebaseAnalytics.Event.VIEW_SEARCH_RESULTS) {
+                param(
+                    FirebaseAnalytics.Param.SEARCH_TERM,
+                    word,
+                )
+            }
+        }
     }
 
     override fun showError(errorMessage: String) {
@@ -245,6 +291,10 @@ class ScannerFragment : Fragment(), ScannerContract.View {
             lifecycleScope.launch {
                 it.isBookmarked = presenter.onBookmarkButtonClicked(it.id)
                 definitionAdapter.notifyItemChanged(definitionAdapter.currentList.indexOf(it))
+
+                analytics.logEvent("bookmark_definition") {
+                    param(FirebaseAnalytics.Param.ITEM_NAME, "${it.getMainKanjiReading()} (${it.getMainKanaReading()})")
+                }
             }
         }
         definitionList.apply {

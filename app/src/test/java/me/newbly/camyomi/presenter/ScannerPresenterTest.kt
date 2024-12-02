@@ -148,7 +148,7 @@ class ScannerPresenterTest : BaseTest() {
         val selectedWord = SAMPLE_TEXT.getWords()[0]
         val expectedDefinitions = DEFINITION_LIST
 
-        doNothing().`when`(view).showDefinitions(any())
+        doNothing().`when`(view).showDefinitions(any(), any())
 
         doAnswer { invocation ->
             val receivedWord = invocation.arguments[0]
@@ -159,7 +159,7 @@ class ScannerPresenterTest : BaseTest() {
 
         presenter.onWordSelected(selectedWord.baseForm)
 
-        verify(view).showDefinitions(expectedDefinitions)
+        verify(view).showDefinitions(expectedDefinitions, selectedWord.originalForm)
     }
 
     @Test

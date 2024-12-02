@@ -79,7 +79,7 @@ class ScannerPresenter @AssistedInject constructor(
             val definitions = fetchDefinitionsUseCase(word).getOrThrow()
 
             view.hideDefinitionsProgress()
-            view.showDefinitions(definitions)
+            view.showDefinitions(definitions, word)
         } catch (e: Exception) {
             view.hideDefinitionsProgress()
             handleException(e)

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.app.distribution)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -18,8 +19,8 @@ android {
         applicationId = "me.newbly.camyomi"
         minSdk = 28
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.0.4"
 
         // default value: androidx.test.runner.AndroidJUnitRunner
         testInstrumentationRunner = "me.newbly.camyomi.CustomTestRunner"
@@ -90,6 +91,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.timber)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)

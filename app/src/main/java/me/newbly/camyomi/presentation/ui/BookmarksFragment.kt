@@ -98,11 +98,11 @@ class BookmarksFragment : Fragment(), BookmarksContract.View {
         }
     }
 
-    private fun removeBookmark(it: DictionaryEntry) {
+    private fun removeBookmark(entry: DictionaryEntry) {
         lifecycleScope.launch {
-            val result = presenter.onBookmarkButtonClicked(it.id)
+            val result = presenter.onBookmarkButtonClicked(entry.id)
             if (result) {
-                val position = bookmarksAdapter.currentList.indexOf(it)
+                val position = bookmarksAdapter.currentList.indexOf(entry)
                 val newList = bookmarksAdapter.currentList.toMutableList()
                 newList.removeAt(position)
                 bookmarksAdapter.submitList(newList)

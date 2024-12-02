@@ -33,8 +33,9 @@ timberVersion = "5.0.1"
 detektVersion = "1.23.3"
 detektGitlabReportVersion = "0.3.3"
 googleServicesVersion = "4.4.2"
-firebaseBomVersion = "33.4.0"
+firebaseBomVersion = "33.6.0"
 firebaseAppDistVersion = "5.0.0"
+firebaseCrashlyticsVersion = "3.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -92,6 +93,7 @@ detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-form
 detekt-gitlab-report = { group = "com.gitlab.cromefire", name = "detekt-gitlab-report", version.ref = "detektGitlabReportVersion"}
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBomVersion" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 
 [plugins]
@@ -105,3 +107,4 @@ compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektVersion" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServicesVersion" }
 firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppDistVersion" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsVersion"}

@@ -19,14 +19,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.messaging.messaging
 import dagger.hilt.android.AndroidEntryPoint
 import me.newbly.camyomi.R
 import me.newbly.camyomi.databinding.ActivityMainBinding
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject lateinit var analytics: FirebaseAnalytics
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
