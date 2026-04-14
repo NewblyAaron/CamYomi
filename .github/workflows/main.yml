@@ -1,0 +1,381 @@
+name: Android CI/CD
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches-ignore: []
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: "Where to deploy"
+        required: true
+        default: firebase
+        type: choice
+        options:
+          - firebase
+          - github-release
+          - both
+      release_tag:
+        description: "Version tag to use (e.g. v1.2.3) — required for GitHub Release"
+        required: false
+        type: string
+      release_notes:
+        description: "Release notes (leave blank to auto-generate)"
+        required: false
+        type: string
+
+# Skip draft PRs
+jobs:
+  check-draft:
+    runs-on: ubuntu-latest
+    outputs:
+      is_draft: ${{ steps.check.outputs.is_draft }}
+    steps:
+      - id: check
+        run: |
+          if [[ "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "is_draft=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_draft=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ──────────────────────────────────────────────
+  # BUILD STAGE
+  # ──────────────────────────────────────────────
+
+  detektDebug:
+    name: Detekt (Lint)
+    needs: check-draft
+    if: |
+      needs.check-draft.outputs.is_draft != 'true' &&
+      (startsWith(github.ref, 'refs/tags/') || github.event_name == 'pull_request')
+    runs-on: ubuntu-latest
+    container:
+      image: alvrme/alpine-android:android-34-jdk17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            .gradle/wrapper
+            .gradle/caches
+          key: ${{ github.ref_name }}
+          restore-keys: |
+            ${{ github.ref_name }}
+
+      - name: Run Detekt
+        run: |
+          chmod +x ./gradlew
+          ./gradlew -Pci --console=plain detektDebug -PbuildDir=lint
+
+      - name: Upload Detekt HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detekt-report
+          path: app/lint/reports/detekt/debug.html
+
+      # Note: GitHub Actions does not natively render GitLab-style Code Quality reports.
+      # The JSON report is uploaded as an artifact for reference.
+      - name: Upload Detekt GitLab JSON Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detekt-codequality
+          path: app/lint/reports/detekt/gitlab.json
+
+  androidLintDebug:
+    name: Android Lint
+    needs: check-draft
+    if: |
+      needs.check-draft.outputs.is_draft != 'true' &&
+      (startsWith(github.ref, 'refs/tags/') || github.event_name == 'pull_request')
+    runs-on: ubuntu-latest
+    container:
+      image: alvrme/alpine-android:android-34-jdk17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            .gradle/wrapper
+            .gradle/caches
+          key: ${{ github.ref_name }}
+          restore-keys: |
+            ${{ github.ref_name }}
+
+      - name: Run Android Lint
+        run: |
+          chmod +x ./gradlew
+          ./gradlew -Pci --console=plain lintDebug -PbuildDir=lint
+
+      - name: Upload Lint Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: app/lint/reports/lint-results-debug.html
+
+  # ──────────────────────────────────────────────
+  # TEST STAGE
+  # ──────────────────────────────────────────────
+
+  debugTests:
+    name: Debug Tests
+    needs: check-draft
+    if: needs.check-draft.outputs.is_draft != 'true'
+    runs-on: ubuntu-latest
+    container:
+      image: alvrme/alpine-android:android-34-jdk17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            .gradle/wrapper
+            .gradle/caches
+          key: ${{ github.ref_name }}
+          restore-keys: |
+            ${{ github.ref_name }}
+
+      - name: Run Debug Tests
+        run: |
+          chmod +x ./gradlew
+          ./gradlew -Pci --console=plain testDebug
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: app/build/test-results/**/*.xml
+
+      - name: Publish Test Results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: app/build/test-results/**/*.xml
+
+  # ──────────────────────────────────────────────
+  # PRE-RELEASE STAGE
+  # ──────────────────────────────────────────────
+
+  assembleRelease:
+    name: Assemble Release APK
+    needs: check-draft
+    if: |
+      needs.check-draft.outputs.is_draft != 'true' &&
+      (startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    container:
+      image: alvrme/alpine-android:android-34-jdk17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            .gradle/wrapper
+            .gradle/caches
+          key: ${{ github.ref_name }}
+          restore-keys: |
+            ${{ github.ref_name }}
+
+      - name: Decode Keystore
+        run: |
+          mkdir -p secrets
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > secrets/android_keystore.jks
+          chmod 644 secrets/android_keystore.jks
+
+      - name: Build Release APK
+        run: |
+          chmod +x ./gradlew
+          ./gradlew -Pci --console=plain assembleRelease \
+            -Pandroid.injected.signing.store.file=$(pwd)/secrets/android_keystore.jks \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Release APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release
+
+  prepareChangelog:
+    name: Prepare Changelog
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use manually provided release notes
+        if: github.event_name == 'workflow_dispatch' && inputs.release_notes != ''
+        run: echo "${{ inputs.release_notes }}" > release_notes.md
+
+      - name: Generate Release Notes (git-cliff)
+        if: inputs.release_notes == ''
+        id: release_notes
+        uses: orhun/git-cliff-action@v3
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        continue-on-error: true
+
+      - name: Fallback — Write placeholder changelog
+        if: inputs.release_notes == '' && steps.release_notes.outcome == 'failure'
+        run: echo "See GitHub Release for full changelog." > release_notes.md
+
+      - name: Save Changelog
+        run: |
+          if [ -f CHANGELOG.md ] && [ ! -f release_notes.md ]; then
+            cp CHANGELOG.md release_notes.md
+          fi
+          cat release_notes.md
+
+      - name: Upload Changelog
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release_notes.md
+
+  uploadRelease:
+    name: Upload APK to GitHub Releases
+    needs: assembleRelease
+    if: |
+      startsWith(github.ref, 'refs/tags/') ||
+      (github.event_name == 'workflow_dispatch' &&
+        (inputs.deploy_target == 'github-release' || inputs.deploy_target == 'both'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+          path: apk
+
+      - name: Resolve tag name
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ inputs.release_tag }}" ]]; then
+            echo "tag=${{ inputs.release_tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload APK to GitHub Release (draft)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: apk/app-release.apk
+          tag_name: ${{ steps.tag.outputs.tag }}
+          draft: true
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ──────────────────────────────────────────────
+  # RELEASE STAGE
+  # ──────────────────────────────────────────────
+
+  deployFirebaseAppDist:
+    name: Deploy to Firebase App Distribution
+    needs: [assembleRelease, prepareChangelog]
+    if: |
+      startsWith(github.ref, 'refs/tags/') ||
+      (github.event_name == 'workflow_dispatch' &&
+        (inputs.deploy_target == 'firebase' || inputs.deploy_target == 'both'))
+    runs-on: ubuntu-latest
+    container:
+      image: alvrme/alpine-android:android-34-jdk17
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            .gradle/wrapper
+            .gradle/caches
+          key: ${{ github.ref_name }}
+          restore-keys: |
+            ${{ github.ref_name }}
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release
+
+      - name: Download Changelog
+        uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: .
+
+      - name: Write Firebase credentials
+        run: |
+          mkdir -p secrets
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > secrets/camyomi-c7fe7-9d3694bc6be0.json
+          chmod 644 secrets/camyomi-c7fe7-9d3694bc6be0.json
+
+      - name: Deploy to Firebase App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/secrets/camyomi-c7fe7-9d3694bc6be0.json
+        run: |
+          chmod +x ./gradlew
+          ./gradlew -Pci --console=plain appDistributionUploadRelease \
+            --releaseNotesFile="./release_notes.md" \
+            --groups="myself, friends, nueca-android-team"
+
+  deployGitHubRelease:
+    name: Create GitHub Release
+    needs: [uploadRelease, prepareChangelog]
+    if: |
+      startsWith(github.ref, 'refs/tags/') ||
+      (github.event_name == 'workflow_dispatch' &&
+        (inputs.deploy_target == 'github-release' || inputs.deploy_target == 'both'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Changelog
+        uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: .
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+          path: apk
+
+      - name: Resolve tag name
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ inputs.release_tag }}" ]]; then
+            echo "tag=${{ inputs.release_tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Release ${{ steps.tag.outputs.tag }}"
+          body_path: release_notes.md
+          draft: false
+          files: apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
