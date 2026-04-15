@@ -25,6 +25,9 @@ on:
         required: false
         type: string
 
+permissions:
+  contents: write
+
 # Skip draft PRs
 jobs:
   check-draft:
